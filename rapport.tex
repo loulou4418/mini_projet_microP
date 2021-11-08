@@ -1,0 +1,82 @@
+\documentclass[a4paper]{article}
+\usepackage{geometry}
+\geometry{a4paper}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\graphicspath{ {./image/} }
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{cite}
+
+\definecolor{mGreen}{rgb}{0,0.6,0}
+\definecolor{mGray}{rgb}{0.5,0.5,0.5}
+\definecolor{mPurple}{rgb}{0.58,0,0.82}
+\definecolor{backgroundColour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{CStyle}{
+    backgroundcolor=\color{backgroundColour},   
+    commentstyle=\color{mGreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{mGray},
+    stringstyle=\color{mPurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    language=C
+}          
+
+\title{\textbf{projet} \\ document}
+
+\author{Louison GOUY}
+
+\begin{document}
+\maketitle
+
+\vspace{2cm}
+
+\begin{center}
+   % \includegraphics[width=12cm]{logo_tp.jpg}
+\end{center}
+
+\vspace*{1cm}
+
+\begin{center}
+    name
+\end{center}
+
+\vspace*{7cm}
+
+\begin{center}
+
+abstract
+
+\end{center}
+\newpage
+\renewcommand{\contentsname}{Table des Matières}
+\tableofcontents
+\newpage
+\renewcommand\listfigurename{Liste des figures}
+\listoffigures
+\newpage
+
+\section{section1}
+ 
+
+\begin{lstlisting}[style=CStyle]
+//code here
+\end{lstlisting}
+
+\bibliography{biblio}{}
+\bibliographystyle{plain}
+
+\end{document}
