@@ -78,9 +78,44 @@ abstract
 
 
 
+\section{Programme de base} % touver un meilleur titre
+
+Dans un premier temps on crée un nouveau projet de type "GCC C ASF Board project". Cela génère une arborescence de fichiers dont un main.c. Ce dernier est étudié de manière globale puis affinée par étape dans la section suivante. L'affinage permettra de citer une partie non exhaustive du code constituant la bibliothèque ASF utilisée dans notre exemple basique.
+
+\subsection{Vue globale}
+Cette partie détaille le fonctionnement du programme de base. 
+
+
 \begin{lstlisting}[style=CStyle]
-//code here
+#include <asf.h>
+
+int main (void)
+{
+	system_init();
+	
+	/* Insert application code here, after the board has been initialized. */
+	
+	/* This skeleton code simply sets the LED to the state of the button. */
+	while (1) {
+		/* Is button pressed? */
+		if (port_pin_get_input_level(BUTTON_0_PIN) == BUTTON_0_ACTIVE) {
+			/* Yes, so turn LED on. */
+			port_pin_set_output_level(LED_0_PIN, LED_0_ACTIVE);
+		} else {
+			/* No, so turn LED off. */
+			port_pin_set_output_level(LED_0_PIN, !LED_0_ACTIVE);
+		}
+	}
+}
 \end{lstlisting}
+La première ligne permet d'inclure la  bibliothèque asf et ainsi de profiter du niveau d'abstraction mis à disposition par Microship. La suivante, bien connu des développeurs C, est le point d'entré du programme. C'est la première fonction exécutée. La ligne 5 \texttt{system\_init();} a été générée automatiquement par le logiciel à la création du projet. C'est elle qui nous offre ce niveau d'abstraction en initialisant les horloges et les entrées/sorties. Elle est spécifique à la cible utilisée, dans notre cas la carte Microchip SAMD21 Xplained Pro.
+
+\subsection{Affinage}
+
+\paragraph{Include ASF}
+~~\\
+L'Advanced Software Framework (ASF) fournit un riche ensemble de pilotes éprouvés et de modules de code développés par des experts pour réduire le temps de conception. Il simplifie l'utilisation des microcontrôleurs en fournissant une abstraction au matériel par le biais de pilotes et de middlewares à forte valeur ajoutée. ASF est une bibliothèque de code gratuite et open-source conçue pour être utilisée lors des phases d'évaluation, de prototypage, de conception et de production.
+
 
 \bibliography{biblio}{}
 \bibliographystyle{plain}
