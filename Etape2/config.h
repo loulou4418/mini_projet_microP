@@ -1,8 +1,0 @@
-#include <asf.h>
-
-Pm * ptr_PM = PM;
-
-PM_APBCSEL_APBCDIV_DIV1
-PM_APBCMASK_TC6
-PM_CPUSEL_CPUDIV_DIV1
-
