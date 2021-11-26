@@ -62,8 +62,19 @@
 \begin{center}
 
 abstract
-
 \end{center}
+
+\newpage
+\vspace*{3cm}
+\begin{quotation}
+	It's not you can use C to generate good code for hardware. If you think like a comupter writing C actually makes sens.
+\end{quotation}
+\begin{flushright}
+	Linus Torvalds
+\end{flushright} 
+\newpage
+
+
 \newpage
 \renewcommand{\contentsname}{Table des Matières}
 \tableofcontents
@@ -71,7 +82,10 @@ abstract
 \renewcommand\listfigurename{Liste des figures}
 \listoffigures
 \newpage
+\section{Le langage C}
+Le langage C est un langage combiné, il a les caractéristiques des langages évolués (boucles itératives etc.) associé à des fonctionnalités des langages assemblés (décalage de bit, adressage indirect généralisé etc.). C'est la combinaison de ces deux caractéristiques qui font la force du langage\cite{Monteil2012}. Sa proximité avec l'assembleur le rendant très efficace, il est ainsi devenu le langage indispensable dans la programmation des applications comme l'automatique, la robotique, les OS ect. Cette même proximité impose peu de contraintes à l'utilisateur sur la structure de son programme. Aussi, il est possible d'écrire des fonctions avec plusieurs points de sorties, ou encore, d'échapper à une boucle avant son terme. Là où certains trouveront une grande souplesse, les critiques le considérerons trop permissive. On notera qu'un certain nombre d'organismes officiels proposent un ensemble de règles visant, tout en conservant son efficacité, à éviter les problèmes liés à une programmation peu soignée. L'Agence National de la Sécurité des Systèmes Informatiques française (ANSSI) propose un rapport complet, \textit{Règles de programmation pour le développement sécurisé de logiciels en langage C}\cite{ANSSI2021}, visant à "favoriser la production de logiciels C plus sécurisés, plus sûrs, d’une plus grande robustesse et portables". Il sera la référence durant ce projet.
 
+\newpage
 
 \section{Programme de base} % touver un meilleur titre
 
@@ -123,7 +137,7 @@ Elles jouent chacune un rôle essentiel dans l'initialisation de carte comme l'h
 
 \paragraph{Boucle infinie}
 ~~\\
-Implémenté à travers un \texttt{tant que VRAI}, cette ligne n'est pas difficile à comprendre mais il peut être intéressant d'en établir le contexte. \\
+Implémenté à travers un \texttt{tant que VRAI}, cette ligne n'est pas difficile à comprendre mais il peut être intéressant d'en établir le contexte. Le guide des bonnes de pratiques de l'ANSSI indique toutefois que la forme d'une boucle infinie est bien \texttt{while(1)} et non \texttt{for(;;)}\\
 De manière générale, le bouclage répète un jeu d'instruction jusqu'à se qu'une condition particulaire soit atteinte. On définit une boucle infinie dès lors que cette condition n'arrive jamais en raison d'une caractéristique inhérente à la boucle. Dans notre cas la condition de sortie serait VRAI=FAUX. C'est impossible ! \\
 Du point de vue matériel l'utilisation d'une boucle infinie permet de borner le programme compteur (PC) dans un espace mémoire bien définit. Le compilateur devrait l'interpréter par un jump ou jmp. Le mieux est probablement de le vérifier. Un fichier \texttt{loop.c} est créé, volontairement le plus simple possible.
 \begin{lstlisting}[style=CStyle]
@@ -142,6 +156,8 @@ Le compilateur gcc a bien implémenté la boucle infinie via une instruction jum
 ~~\\
 Le lignes suivantes implémenté via une structure \texttt{if else} traduise le comportement souhaité du point de vue utilisateur. A savoir, le maintient en position enfoncé du bouton provoque l'illumination de la LED0. La lecture de son état est permis grâce à la fonction \textbf{port\_pin\_get\_input\_level} retournant un entier de valeur XX ou XX. Elle est alors comparé à \texttt{LED\_0\_ACTIVE} définit comme XX. Si la condition est vrai la fonction \texttt{port\_pin\_set\_output\_level} est appelé avec comme paramètre \texttt{LED\_0\_ACTIVE} sinon \texttt{!LED\_0\_ACTIVE}.
 
+
+\newpage
 \section{Programmation d'un timer}
 Cette étape vise à générer un signal carré de période 1ms sur une des sorties timer du microcontrôleur. Il s'agit donc de préparer l'implantation de la fonction Horloge. Cette fonction sera donc réalisée par une ressource matérielle du microcontrôleur ; un timer.
 \subsection{Fonctionnement d'un timer}
@@ -151,8 +167,8 @@ Configuration du TC6.
 
 
 
-\bibliography{biblio}{}
-\bibliographystyle{plain}
+\bibliography{lib}{}
+\bibliographystyle{unsrt}
 
 \end{document}
 
