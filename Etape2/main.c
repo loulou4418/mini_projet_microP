@@ -32,10 +32,17 @@
  * Support and FAQ: visit <a href="https://www.microchip.com/support/">Microchip Support</a>
  */
 #include <asf.h>
+#include "conf_projet.h"
+
 
 int main (void)
 {
 	system_init();
+	
+	config_GCLK_TC6();
+	config_PM_TC6();
+	config_PORT();
+	config_TC6();
 
 	/* Insert application code here, after the board has been initialized. */
 
