@@ -62,19 +62,8 @@
 \begin{center}
 
 abstract
+
 \end{center}
-
-\newpage
-\vspace*{3cm}
-\begin{quotation}
-	It's not you can use C to generate good code for hardware. If you think like a comupter writing C actually makes sens.
-\end{quotation}
-\begin{flushright}
-	Linus Torvalds
-\end{flushright} 
-\newpage
-
-
 \newpage
 \renewcommand{\contentsname}{Table des Matières}
 \tableofcontents
@@ -82,10 +71,7 @@ abstract
 \renewcommand\listfigurename{Liste des figures}
 \listoffigures
 \newpage
-\section{Le langage C}
-Le langage C est un langage combiné, il a les caractéristiques des langages évolués (boucles itératives etc.) associé à des fonctionnalités des langages assemblés (décalage de bit, adressage indirect généralisé etc.). C'est la combinaison de ces deux caractéristiques qui font la force du langage\cite{Monteil2012}. Sa proximité avec l'assembleur le rendant très efficace, il est ainsi devenu le langage indispensable dans la programmation des applications comme l'automatique, la robotique, les OS ect. Cette même proximité impose peu de contraintes à l'utilisateur sur la structure de son programme. Aussi, il est possible d'écrire des fonctions avec plusieurs points de sorties, ou encore, d'échapper à une boucle avant son terme. Là où certains trouveront une grande souplesse, les critiques le considérerons trop permissive. On notera qu'un certain nombre d'organismes officiels proposent un ensemble de règles visant, tout en conservant son efficacité, à éviter les problèmes liés à une programmation peu soignée. L'Agence National de la Sécurité des Systèmes Informatiques française (ANSSI) propose un rapport complet, \textit{Règles de programmation pour le développement sécurisé de logiciels en langage C}\cite{ANSSI2021}, visant à "favoriser la production de logiciels C plus sécurisés, plus sûrs, d’une plus grande robustesse et portables". Il sera la référence durant ce projet.
 
-\newpage
 
 \section{Programme de base} % touver un meilleur titre
 
@@ -137,7 +123,7 @@ Elles jouent chacune un rôle essentiel dans l'initialisation de carte comme l'h
 
 \paragraph{Boucle infinie}
 ~~\\
-Implémenté à travers un \texttt{tant que VRAI}, cette ligne n'est pas difficile à comprendre mais il peut être intéressant d'en établir le contexte. Le guide des bonnes de pratiques de l'ANSSI indique toutefois que la forme d'une boucle infinie est bien \texttt{while(1)} et non \texttt{for(;;)}\\
+Implémenté à travers un \texttt{tant que VRAI}, cette ligne n'est pas difficile à comprendre mais il peut être intéressant d'en établir le contexte. \\
 De manière générale, le bouclage répète un jeu d'instruction jusqu'à se qu'une condition particulaire soit atteinte. On définit une boucle infinie dès lors que cette condition n'arrive jamais en raison d'une caractéristique inhérente à la boucle. Dans notre cas la condition de sortie serait VRAI=FAUX. C'est impossible ! \\
 Du point de vue matériel l'utilisation d'une boucle infinie permet de borner le programme compteur (PC) dans un espace mémoire bien définit. Le compilateur devrait l'interpréter par un jump ou jmp. Le mieux est probablement de le vérifier. Un fichier \texttt{loop.c} est créé, volontairement le plus simple possible.
 \begin{lstlisting}[style=CStyle]
@@ -156,19 +142,60 @@ Le compilateur gcc a bien implémenté la boucle infinie via une instruction jum
 ~~\\
 Le lignes suivantes implémenté via une structure \texttt{if else} traduise le comportement souhaité du point de vue utilisateur. A savoir, le maintient en position enfoncé du bouton provoque l'illumination de la LED0. La lecture de son état est permis grâce à la fonction \textbf{port\_pin\_get\_input\_level} retournant un entier de valeur XX ou XX. Elle est alors comparé à \texttt{LED\_0\_ACTIVE} définit comme XX. Si la condition est vrai la fonction \texttt{port\_pin\_set\_output\_level} est appelé avec comme paramètre \texttt{LED\_0\_ACTIVE} sinon \texttt{!LED\_0\_ACTIVE}.
 
-
-\newpage
 \section{Programmation d'un timer}
 Cette étape vise à générer un signal carré de période 1ms sur une des sorties timer du microcontrôleur. Il s'agit donc de préparer l'implantation de la fonction Horloge. Cette fonction sera donc réalisée par une ressource matérielle du microcontrôleur ; un timer.
 \subsection{Fonctionnement d'un timer}
-Rappel fonctionnement d'un timer.
+Le microcontrôleur SAMD21 utilisé possède 5 counter/timer utilisable allant de TC3 à TC7. Il est ensuite possible de les paramétrer en fonction de l’utilisation qu’il en sera fait. Pour notre cas, le timer TC6 est imposé pour cette fonction Horloge.\\
+Chaque timer peut prendre 3 configurations possibles : 8, 16 ou 32 bits (ce dernier fonctionne avec 2 timers 16 bits cascadés). Le nombre de registres associés à chacune des configurations est différent. Pour notre cas, on utilisera le mode 16 bits (65536 valeurs possibles).  \\
+\paragraph{Fonctionnement du TC en mode waveform}
+~~\\
+Les Timers/Counters (TC) du microcontrôleur SAMD21 proposent un mode de fonctionnement adapté à la production de signaux logiques : le mode {\sl waveform}. Afin de configurer ce mode il va falloir configurer certains registres du microcontrôleur pour obtenir un signal rectangulaire de rapport cyclique quelconque. \\
+Il existe 4 modes de fonctionnement pour les compteurs en WAVEFORM donnés en figure ci-dessous. \\
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=12cm]{figure/mode Waveform.jpg}
+\caption{Mode de fonctionnement en WAVEFORM pour les compteurs}
+\label{pic1}
+\end{figure}
+
+Le mode MFRQ, plus adapté afin d'obtenir la fréquence voulue, sera donc choisi pour la génération du signal logique stable et périodique. D'après la datasheet du SAMD21, le fonctionnement du mode MFRQ est le suivant. \\
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=12cm]{figure/Match Frequency Operation.jpg}
+\caption{Match Frequency Operation(MFRQ)}
+\label{pic2}
+\end{figure}
+
+La période T du signal est contrôlée par le registre CC0 qu'il faudra modifier. Le signal de sortie est un signal numérique dont la valeur se trouve sur WO[0]. Le signal de sortie WO[0] est permuté à chaque fois que le compteur atteint la valeur du registre CC0. La valeur MAX correspond à la résolution du compteur : ici 16 bits donc 65536 valeurs possibles. \\
+
+\paragraph{Calculs pour une fréquence de 1kHz}
+~~\\
+Pour obtenir une fréquence de 1kHz il faut déterminer la valeur de CC0 comme expliqué précédemment. Afin de déterminer cette valeur il faut dans un premier temps comprendre comment le comptage est effectué et à quelle fréquence. La figure ci-dessous donne la fréquence de comptage. \\
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=12cm]{figure/prescaler.jpg}
+\caption{Configuration du compteur TC}
+\label{pic3}
+\end{figure}
+
+L'horloge count est fournie à partir de l’horloge GCLK\_TC (Generic clock for TC) qui est l'horloge de référence pour les TC. Elle a une fréquence de 8MHz. Cette horloge peut être divisée en y appliquant un prescaler afin d’obtenir CLK\_TC\_CNT. N est une prédivision de l’horloge du timer. Dans notre cas, le prescaler n’est pas appliqué et prendra la valeur N = 1. L'équation ci-dessous présente la fréquence à laquelle sera effectué le comptage. \\
+$$T_{GCLK\_TC} = N*T_{CLK\_TC\_CNT} = T_{CLK\_TC\_CNT}$$
+Donc\\
+$$f_{GCLK\_TC} = f_{CLK\_TC\_CNT}$$
+La fréquence souhaitée est établie à partir de l'équation suivante :
+$$f_{WO[0]} = \frac{f_{CLK\_TC\_CNT}}{2*(CC0+1)}$$
+On sait que $f_{GCLK\_TC}$ est égale à 8 MHz. Pour une fréquence $f_{WO[0]}$ de 1kHz, on obtient\\
+$$CC0 = \frac{f_{GCLK\_TC}}{2*f_{WO[0]}} - 1 = 3999$$
 \subsection{Configuration TC6}
 Configuration du TC6.
 
 
 
-\bibliography{lib}{}
-\bibliographystyle{unsrt}
+\bibliography{biblio}{}
+\bibliographystyle{plain}
 
 \end{document}
 
