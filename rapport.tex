@@ -11,6 +11,8 @@
 \usepackage{xcolor}
 \usepackage{cite}
 \usepackage{color}
+\usepackage{float}
+\usepackage{soul}
 
 
 \definecolor{mGreen}{rgb}{0,0.6,0}
@@ -83,7 +85,7 @@ abstract
 \listoffigures
 \newpage
 \section{Le langage C}
-Le langage C est un langage combiné, il a les caractéristiques des langages évolués (boucles itératives etc.) associé à des fonctionnalités des langages assemblés (décalage de bit, adressage indirect généralisé etc.). C'est la combinaison de ces deux caractéristiques qui font la force du langage\cite{Monteil2012}. Sa proximité avec l'assembleur le rendant très efficace, il est ainsi devenu le langage indispensable dans la programmation des applications comme l'automatique, la robotique, les OS ect. Cette même proximité impose peu de contraintes à l'utilisateur sur la structure de son programme. Aussi, il est possible d'écrire des fonctions avec plusieurs points de sorties, ou encore, d'échapper à une boucle avant son terme. Là où certains trouveront une grande souplesse, les critiques le considérerons trop permissive. On notera qu'un certain nombre d'organismes officiels proposent un ensemble de règles visant, tout en conservant son efficacité, à éviter les problèmes liés à une programmation peu soignée. L'Agence National de la Sécurité des Systèmes Informatiques française (ANSSI) propose un rapport complet, \textit{Règles de programmation pour le développement sécurisé de logiciels en langage C}\cite{ANSSI2021}, visant à "favoriser la production de logiciels C plus sécurisés, plus sûrs, d’une plus grande robustesse et portables". Il sera la référence durant ce projet.
+Le langage C est un langage combiné, il a les caractéristiques des langages évolués (boucles itératives etc.) associé à des fonctionnalités des langages assemblés (décalage de bit, adressage indirect généralisé etc.). C'est la combinaison de ces deux caractéristiques qui font la force du langage\cite{Monteil2012}. Sa proximité avec l'assembleur le rendant très efficace, il est ainsi devenu le langage indispensable dans la programmation des applications comme l'automatique, la robotique, les OS ect. Cette même proximité impose peu de contraintes à l'utilisateur sur la structure de son programme. Aussi, il est possible d'écrire des fonctions avec plusieurs points de sorties, ou encore, d'échapper à une boucle avant son terme. Là où certains trouveront une grande souplesse, les critiques le considérerons trop permissive. On notera qu'un certain nombre d'organismes officiels proposent un ensemble de règles visant, tout en conservant son efficacité, à éviter les problèmes liés à une programmation peu soignée. L'Agence National de la Sécurité des Systèmes Informatiques française (ANSSI) propose un rapport complet, \textit{Règles de programmation pour le développement sécurisé de logiciels en langage C}\cite{ANSSI2021}, visant à "favoriser la production de logiciels C plus sécurisés, plus sûrs, d’une plus grande robustesse et portables". Il servira de référence durant ce projet.
 
 \newpage
 
@@ -117,13 +119,13 @@ int main (void)
 	}
 }
 \end{lstlisting}
-La première ligne permet d'inclure la  bibliothèque asf et ainsi de profiter du niveau d'abstraction mis à disposition par Microship. La suivante, bien connu des développeurs C, est le point d'entré du programme. C'est la première fonction exécutée. La ligne 5 \texttt{system\_init();} a été générée automatiquement par le logiciel à la création du projet. C'est elle qui nous offre ce niveau d'abstraction en initialisant les horloges et les entrées/sorties. Elle est spécifique à la cible utilisée, dans notre cas la carte Microchip SAMD21 Xplained Pro. La ligne 10 correspond à l'implémentation d'une boucle infinie. Cette dernière permet de lire l'état du bouton (ligne 12) à chaque exécution de la boucle. La condition suivante d’éclanche alors le résultat souhaité l'allumage ou l'extinction de la LED0.
+La première ligne permet d'inclure la  bibliothèque asf et ainsi de profiter du niveau d'abstraction mis à disposition par Microship. La suivante, \texttt{int main ()} bien connue des développeurs C, est le point d'entré du programme. C'est la première fonction exécutée. La ligne 5 \texttt{system\_init();} a été générée automatiquement par le logiciel à la création du projet. C'est elle qui nous offre ce niveau d'abstraction en initialisant les horloges et les entrées/sorties etc. Elle est spécifique à la cible utilisée, dans notre cas la carte Microchip SAMD21 Xplained Pro. La ligne 10 correspond à l'implémentation d'une boucle infinie. Cette dernière permet de lire l'état du bouton (ligne 12) en "continu". La condition suivante d’éclanche le résultat souhaité : allumage ou extinction de la LED0.
 
 \subsection{Affinage}
 
 \paragraph{Include ASF}
 ~~\\
-L'Advanced Software Framework (ASF) fournit un riche ensemble de pilotes éprouvés et de modules de code développés par des experts pour réduire le temps de conception. Il simplifie l'utilisation des microcontrôleurs en fournissant une abstraction au matériel par le biais de pilotes et de middlewares à forte valeur ajoutée. ASF est une bibliothèque de code gratuite et open-source conçue pour être utilisée lors des phases d'évaluation, de prototypage, de conception et de production. Elle sera utilisée tout au long de ce TP et fera l'objet de nombreuses références.
+L'Advanced Software Framework (ASF) fournit un riche ensemble de pilotes éprouvés et de modules de code développés par des experts pour réduire le temps de conception. Il simplifie l'utilisation des microcontrôleurs en fournissant une abstraction au matériel. ASF est une bibliothèque de code gratuite et open-source conçue pour être utilisée lors des phases d'évaluation, de prototypage, de conception et de production. Elle sera utilisée tout au long de ce TP et fera l'objet de nombreuses références.
 
 \paragraph{System\_init}
 ~~\\
@@ -151,44 +153,44 @@ Puis la commande \texttt{gcc -S -fverbose-asm loop.c} est exécutée dans un ter
 # loop.c:2: 	while (1);
 jmp	.L2	#
 \end{lstlisting}
-Le compilateur gcc a bien implémenté la boucle infinie via une instruction jump indiquant un saut du PC. Dans cette exemple, la boucle étant vide, le PC saute au même endroit.
+Le compilateur gcc a bien implémenté la boucle infinie via une instruction jump indiquant un saut du PC. Dans cette exemple, la boucle étant vide, le PC saute au même endroit. Il est intéressant de faire le parallèle avec l'assembleur. Cet exemple reste toutefois approximatif puisque ce n'est pas le jeux d'instruction du CORTEXM0+ qui a été utilisé. Prenons le comme une introduction.
+
 \paragraph{Condition sur E/S}
 ~~\\
-Le lignes suivantes implémenté via une structure \texttt{if else} traduise le comportement souhaité du point de vue utilisateur. A savoir, le maintient en position enfoncé du bouton provoque l'illumination de la LED0. La lecture de son état est permis grâce à la fonction \textbf{port\_pin\_get\_input\_level} retournant un entier de valeur XX ou XX. Elle est alors comparé à \texttt{LED\_0\_ACTIVE} définit comme XX. Si la condition est vrai la fonction \texttt{port\_pin\_set\_output\_level} est appelé avec comme paramètre \texttt{LED\_0\_ACTIVE} sinon \texttt{!LED\_0\_ACTIVE}.
+Les lignes suivantes implémentées via une structure \texttt{if else} traduisent le comportement souhaité du point de vue utilisateur. A savoir, le maintient en position enfoncé du bouton provoque l'illumination de la LED0. La lecture de son état est permis grâce à la fonction \textbf{port\_pin\_get\_input\_level} retournant un entier de valeur \hl{XX} ou XX. Elle est alors comparé à \texttt{LED\_0\_ACTIVE} définit comme XX. Si la condition est vrai la fonction \texttt{port\_pin\_set\_output\_level} est appelé avec comme paramètre \texttt{LED\_0\_ACTIVE} sinon \texttt{!LED\_0\_ACTIVE}.
 
 
 \newpage
 \section{Programmation d'un timer}
 Cette étape vise à générer un signal carré de période 1ms sur une des sorties timer du microcontrôleur. Il s'agit donc de préparer l'implantation de la fonction Horloge. Cette fonction sera donc réalisée par une ressource matérielle du microcontrôleur ; un timer.
 \subsection{Fonctionnement d'un timer}
-Le microcontrôleur SAMD21 utilisé possède 5 counter/timer utilisable allant de TC3 à TC7. Il est ensuite possible de les paramétrer en fonction de l’utilisation qu’il en sera fait. Pour notre cas, le timer TC6 est imposé pour cette fonction Horloge.\\
-Chaque timer peut prendre 3 configurations possibles : 8, 16 ou 32 bits (ce dernier fonctionne avec 2 timers 16 bits cascadés). Le nombre de registres associés à chacune des configurations est différent. Pour notre cas, on utilisera le mode 16 bits (65536 valeurs possibles).  \\
+Le microcontrôleur SAMD21 possède 5 timers/counters allant de TC3 à TC7. Il est possible de les paramétrer en fonction de l’utilisation qu’il en sera fait. Dans notre cas, le timer TC6 est imposé par le sujet du TP.\\
+Chaque timer peut prendre 3 configurations possibles : 8, 16 ou 32 bits\footnote{Le timer 32bits fonctionne en assemblant 2 timers 16 bits en cascade}. Le nombre de registres associés à chacune des configurations est différent. Nous utiliserons le mode 16 bits (65536 valeurs possibles).  \\
 \paragraph{Fonctionnement du TC en mode waveform}
 ~~\\
-Les Timers/Counters (TC) du microcontrôleur SAMD21 proposent un mode de fonctionnement adapté à la production de signaux logiques : le mode {\sl waveform}. Afin de configurer ce mode il va falloir configurer certains registres du microcontrôleur pour obtenir un signal rectangulaire de rapport cyclique quelconque. \\
-Il existe 4 modes de fonctionnement pour les compteurs en WAVEFORM donnés en figure ci-dessous. \\
+Les timers/counters (TC) du microcontrôleur SAMD21 proposent un mode de fonctionnement adapté à la production de signaux logiques : le mode {\sl waveform}. La sélection du mode se fait via la configuration de certains registres. L'objectif est de générer un signal rectangulaire de rapport cyclique quelconque. \\
+Il existe 4 modes de fonctionnement pour les compteurs en mode WAVEFORM présenté par la figure ci-dessous. \\
 
-\begin{figure}[htbp]
+\begin{figure}[H]
 \centering
 \includegraphics[width=12cm]{figure/mode Waveform.jpg}
 \caption{Mode de fonctionnement en WAVEFORM pour les compteurs}
 \label{pic1}
 \end{figure}
 
-Le mode MFRQ, plus adapté afin d'obtenir la fréquence voulue, sera donc choisi pour la génération du signal logique stable et périodique. D'après la datasheet du SAMD21, le fonctionnement du mode MFRQ est le suivant. \\
+Le mode Match Frequency Generation (MFRQ) est le plus adapté à l'application. En effet, la fréquence n'est fixée qu'avec un seul paramètre CC0. D'après la datasheet du SAMD21, le fonctionnement du mode MFRQ est le suivant. \\
 
-\begin{figure}[htbp]
+\begin{figure}[H]
 \centering
 \includegraphics[width=12cm]{figure/Match Frequency Operation.jpg}
-\caption{Match Frequency Operation(MFRQ)}
+\caption{Fonctionnement timer configuré en MFRQ}
 \label{pic2}
 \end{figure}
-
-La période T du signal est contrôlée par le registre CC0 qu'il faudra modifier. Le signal de sortie est un signal numérique dont la valeur se trouve sur WO[0]. Le signal de sortie WO[0] est permuté à chaque fois que le compteur atteint la valeur du registre CC0. La valeur MAX correspond à la résolution du compteur : ici 16 bits donc 65536 valeurs possibles. \\
+La période T du signal est contrôlée par le registre CC0. Le signal de sortie est numérique, sa valeur se trouve dans WO[0]. A chaque fois que le compteur COUNT atteint la valeur du registre CC0.  Le signal de sortie WO[0] est permuté. La valeur MAX correspond à la résolution du compteur : ici 16 bits donc 65536 valeurs possibles. Il faudra être vigilent car la valeur du compteur vaut deux fois celle du signal de sortie.\\
 
 \paragraph{Calculs pour une fréquence de 1kHz}
 ~~\\
-Pour obtenir une fréquence de 1kHz il faut déterminer la valeur de CC0 comme expliqué précédemment. Afin de déterminer cette valeur il faut dans un premier temps comprendre comment le comptage est effectué et à quelle fréquence. La figure ci-dessous donne la fréquence de comptage. \\
+Pour obtenir une fréquence de 1kHz il faut déterminer la valeur de CC0 comme expliqué précédemment. Pour faire cela il est primordial de bien comprendre son fonctionnement et les registres impliqués dans la configuration. La figure ci-dessous donne la fréquence de comptage. \\
 
 \begin{figure}[htbp]
 \centering
@@ -197,18 +199,29 @@ Pour obtenir une fréquence de 1kHz il faut déterminer la valeur de CC0 comme e
 \label{pic3}
 \end{figure}
 
-L'horloge count est fournie à partir de l’horloge GCLK\_TC (Generic clock for TC) qui est l'horloge de référence pour les TC. Elle a une fréquence de 8MHz. Cette horloge peut être divisée en y appliquant un prescaler afin d’obtenir CLK\_TC\_CNT. N est une prédivision de l’horloge du timer. Dans notre cas, le prescaler n’est pas appliqué et prendra la valeur N = 1. L'équation ci-dessous présente la fréquence à laquelle sera effectué le comptage. \\
-$$T_{GCLK\_TC} = N*T_{CLK\_TC\_CNT} = T_{CLK\_TC\_CNT}$$
-Donc\\
-$$f_{GCLK\_TC} = f_{CLK\_TC\_CNT}$$
+L'horloge count est fournie à partir de l’horloge GCLK\_TC (Generic clock for TC). Elle est l'horloge de référence pour les TC. Elle a une fréquence de 8MHz. Cette horloge peut être divisée en y appliquant un prescaler afin d’obtenir CLK\_TC\_CNT. N est une pré division de l’horloge du timer. Dans notre cas, le prescaler n’est pas appliqué et prendra la valeur N = 1. L'équation ci-dessous présente la fréquence à laquelle sera effectué le comptage. \\
+\begin{equation}
+	T_{GCLK\_TC} = N*T_{CLK\_TC\_CNT} = T_{CLK\_TC\_CNT}
+\end{equation}
+
+Donc
+\begin{equation}
+	f_{GCLK\_TC} = f_{CLK\_TC\_CNT}
+\end{equation}
 La fréquence souhaitée est établie à partir de l'équation suivante :
-$$f_{WO[0]} = \frac{f_{CLK\_TC\_CNT}}{2*(CC0+1)}$$
+\begin{equation}
+	f_{WO[0]} = \frac{f_{CLK\_TC\_CNT}}{2*(CC0+1)}
+\end{equation}
 On sait que $f_{GCLK\_TC}$ est égale à 8 MHz. Pour une fréquence $f_{WO[0]}$ de 1kHz, on obtient\\
-$$CC0 = \frac{f_{GCLK\_TC}}{2*f_{WO[0]}} - 1 = 3999$$
+\begin{equation}
+	CC0 = \frac{f_{GCLK\_TC}}{2*f_{WO[0]}} - 1 = 3999
+\end{equation}
+La valeur chargée dans le registre CC0 sera donc 3999.
 \subsection{Configuration TC6}
 Configuration du TC6.
 
 
+\newpage
 
 \bibliography{lib}{}
 \bibliographystyle{unsrt}
