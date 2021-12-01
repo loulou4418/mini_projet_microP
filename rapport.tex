@@ -123,7 +123,7 @@ La première ligne permet d'inclure la  bibliothèque asf et ainsi de profiter d
 
 \paragraph{Include ASF}
 ~~\\
-L'Advanced Software Framework (ASF) fournit un riche ensemble de pilotes éprouvés et de modules de code développés par des experts pour réduire le temps de conception. Il simplifie l'utilisation des microcontrôleurs en fournissant une abstraction au matériel par le biais de pilotes et de middlewares à forte valeur ajoutée. ASF est une bibliothèque de code gratuite et open-source conçue pour être utilisée lors des phases d'évaluation, de prototypage, de conception et de production. 
+L'Advanced Software Framework (ASF) fournit un riche ensemble de pilotes éprouvés et de modules de code développés par des experts pour réduire le temps de conception. Il simplifie l'utilisation des microcontrôleurs en fournissant une abstraction au matériel par le biais de pilotes et de middlewares à forte valeur ajoutée. ASF est une bibliothèque de code gratuite et open-source conçue pour être utilisée lors des phases d'évaluation, de prototypage, de conception et de production. Elle sera utilisée tout au long de ce TP et fera l'objet de nombreuses références.
 
 \paragraph{System\_init}
 ~~\\
@@ -133,11 +133,11 @@ Au début du \texttt{main} la fonction \texttt{system\_init()} est appelée. Com
 	 \texttt{\_system\_events\_init();}
 	 \texttt{\_system\_extint\_init();}
 	 et  \texttt{\_system\_divas\_init();}.
-Elles jouent chacune un rôle essentiel dans l'initialisation de carte comme l'horloge ou les entrées sorties par exemple.
+Elles jouent chacune un rôle essentiel dans l'initialisation de carte.
 
 \paragraph{Boucle infinie}
 ~~\\
-Implémenté à travers un \texttt{tant que VRAI}, cette ligne n'est pas difficile à comprendre mais il peut être intéressant d'en établir le contexte. Le guide des bonnes de pratiques de l'ANSSI indique toutefois que la forme d'une boucle infinie est bien \texttt{while(1)} et non \texttt{for(;;)}\\
+Implémenté à travers un \texttt{tant que VRAI}, cette ligne n'est pas difficile à comprendre mais il peut être intéressant d'en établir le contexte. Le guide des bonnes de pratiques de l'ANSSI\cite{ANSSI2021} indique toutefois que la forme d'une boucle infinie est bien \texttt{while(1)} et non \texttt{for(;;)}\\
 De manière générale, le bouclage répète un jeu d'instruction jusqu'à se qu'une condition particulaire soit atteinte. On définit une boucle infinie dès lors que cette condition n'arrive jamais en raison d'une caractéristique inhérente à la boucle. Dans notre cas la condition de sortie serait VRAI=FAUX. C'est impossible ! \\
 Du point de vue matériel l'utilisation d'une boucle infinie permet de borner le programme compteur (PC) dans un espace mémoire bien définit. Le compilateur devrait l'interpréter par un jump ou jmp. Le mieux est probablement de le vérifier. Un fichier \texttt{loop.c} est créé, volontairement le plus simple possible.
 \begin{lstlisting}[style=CStyle]
