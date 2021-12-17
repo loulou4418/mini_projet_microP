@@ -33,9 +33,14 @@
  */
 #include <asf.h>
 #include "conf_projet.h"
+#include "calcul_gabarit.h"
+
+uint16_t g_VPalier;
 
 void procedure_traitement_IT(void);
-uint16_t calcul_gabarit ();
+uint16_t get_VPalier(void);
+void set_VPalier(uint16_t VPalier);
+
 
 int main (void)
 {
@@ -57,6 +62,8 @@ int main (void)
 
 
 	/* Insert application code here, after the board has been initialized. */
+	
+	set_VPalier(2500);
 
 	/* This skeleton code simply sets the LED to the state of the button. */
 	while (1) {
@@ -76,10 +83,6 @@ void procedure_traitement_IT(void){
 	Port *ptr_Port = PORT;
 
 	ptr_Port->Group[1].OUTTGL.reg = PORT_PB06;
-	
-
-	
-
 }
 
 void TC6_Handler(void){
@@ -88,77 +91,15 @@ void TC6_Handler(void){
 	procedure_traitement_IT();
 	
 	Dac * ptr_DAC = DAC;
-	ptr_DAC -> DATA.reg = calcul_gabarit ();
+	ptr_DAC -> DATA.reg = calcul_gabarit ((get_VPalier()*DAC_RESOLUTION)/V_MAX);
 
 	ptr_TC->COUNT16.INTFLAG.reg = TC_INTFLAG_MC0;
 }
 
-uint16_t calcul_gabarit (){
-		typedef enum state_t
-		{
-			WAIT,
-			RISE,
-			CTE,
-			FALL
-		} state_t;
-
-		static state_t state = WAIT;
-		static uint16_t time = 0;
-		static uint16_t DACValue = 0;
-
-		switch (state)
-		{
-			case WAIT:
-			time++;
-			if (time >= 64)
-			{
-				state = RISE;
-				time = 0;
-			}
-			break;
-
-			case RISE:
-			time ++;
-			if (DACValue < (1024 - 8)){
-				DACValue += 8;
-			}
-			if (time >= 128)
-			{
-				state = CTE;
-				DACValue = 1023;
-				time = 0;
-			}
-			break;
-
-			case CTE:
-			time++;
-			if (time >= 512)
-			{
-				state = FALL;
-				time = 0;
-			}
-			break;
-
-			case FALL:
-			time++;
-			if(DACValue > (0 + 8)){
-				DACValue -= 8;
-			}
-			/* time : 1023/8 = 128 */
-			if (time >= 128)
-			{
-				state = WAIT;
-				DACValue = 0;
-				time = 0;
-			}
-			break;
-
-			/* Etat defaut = erreur raz variables */
-			default:
-			state = WAIT;
-			time = 0;
-			DACValue = 0;
-			break;
-		}
-	return DACValue;
+uint16_t get_VPalier(){
+	return g_VPalier;
 }
+void set_VPalier(uint16_t VPalier){
+	g_VPalier = VPalier;
+}
+
