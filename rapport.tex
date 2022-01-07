@@ -4,7 +4,7 @@
 \geometry{a4paper}
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}
-\graphicspath{ {./image/} }
+\graphicspath{ {./data/} }
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{listings}
@@ -45,89 +45,88 @@
 \author{Louison GOUY \and Yiying WEI}
 
 \begin{document}
-	\maketitle
+
+\maketitle
+
+\vspace{2cm}
+
+\begin{center}
+   % \includegraphics[width=12cm]{logo_tp.jpg}
+\end{center}
+
+\vspace*{1cm}
+
+\begin{center}
+    name
+\end{center}
+
+\vspace*{7cm}
+
+\begin{center}
+
+abstract
+\end{center}
+
+\newpage
+\vspace*{3cm}
+\begin{quotation}
+	"It's not you can use C to generate good code for hardware. If you think like a comupter writing C actually makes sens."
+\end{quotation}
+\begin{flushright}
+	Linus Torvalds
+\end{flushright} 
+\newpage
+
+
+\newpage
+\renewcommand{\contentsname}{Table des Matières}
+\tableofcontents
+\newpage
+\renewcommand\listfigurename{Liste des figures}
+\listoffigures
+\newpage
+
+\section{Glossaire}
+
+\textbf{Requête d'interruption} : (IRQ : interrupt request) Signal matériel indiquant qu'une interruption est requise. \\ ~ \\
+
+\textbf{Polling} : approche d'ordonnancement dans laquelle le logiciel répète un test sur une condition pour déterminer s'il doit exécuter une tache.\cite{ARM_book} \\ ~ \\
+
+Une\textbf{ machine état ou automate fini} est une construction mathématique abstraite, susceptible d'être dans un nombre fini d'\textit{états} , mais étant un moment donné dans un seul état à la fois. Le passage d'un état à un autre ce fait par une \textit{transition}. 
+
+\newpage
+
+\section{Le langage C}
+Le langage C est un langage combiné, il a les caractéristiques des langages évolués (boucles itératives etc.) associé à des fonctionnalités des langages assemblés (décalage de bit, adressage indirect généralisé etc.). C'est la combinaison de ces deux caractéristiques qui font la force du langage\cite{Monteil2012}. Sa proximité avec l'assembleur le rendant très efficace, il est ainsi devenu le langage indispensable dans la programmation des applications comme l'automatique, la robotique, les OS ect. Cette même proximité impose peu de contraintes à l'utilisateur sur la structure de son programme. Aussi, il est possible d'écrire des fonctions avec plusieurs points de sorties, ou encore, d'échapper à une boucle avant son terme. Là où certains trouveront une grande souplesse, les critiques le considérerons trop permissif. On notera qu'un certain nombre d'organismes officiels proposent un ensemble de règles visant, tout en conservant son efficacité, à éviter les problèmes liés à une programmation peu soignée. L'Agence National de la Sécurité des Systèmes Informatiques française (ANSSI) propose un rapport complet, \textit{Règles de programmation pour le développement sécurisé de logiciels en langage C}\cite{ANSSI2021}, visant à "favoriser la production de logiciels C plus sécurisés, plus sûrs, d’une plus grande robustesse et portables". Il servira de référence durant ce projet.
+
+\newpage
+
+\section{Programme de base} % touver un meilleur titre
+
+Dans un premier temps un nouveau projet est créé de type "GCC C ASF Board project". Microchip studio génère alors une arborescence de fichiers dont un main.c. Ce dernier est étudié de manière globale puis affinée par étape dans la section suivante.
+
+\subsection{Vue globale}
+Cette partie détaille le fonctionnement du programme de base. 
+
+
+\begin{lstlisting}[style=CStyle]
+#include <asf.h>
+
+int main (void)
+{
+	system_init();
 	
-	\vspace{2cm}
+	/* Insert application code here, after the board has been initialized. */
 	
-	\begin{center}
-		% \includegraphics[width=12cm]{logo_tp.jpg}
-	\end{center}
-	
-	\vspace*{1cm}
-	
-	\begin{center}
-		name
-	\end{center}
-	
-	\vspace*{7cm}
-	
-	\begin{center}
-		
-		abstract
-	\end{center}
-	
-	\newpage
-	\vspace*{3cm}
-	\begin{quotation}
-		It's not you can use C to generate good code for hardware. If you think like a comupter writing C actually makes sens.
-	\end{quotation}
-	\begin{flushright}
-		Linus Torvalds
-	\end{flushright} 
-	\newpage
-	
-	
-	\newpage
-	\renewcommand{\contentsname}{Table des Matières}
-	\tableofcontents
-	\newpage
-	\renewcommand\listfigurename{Liste des figures}
-	\listoffigures
-	\newpage
-	
-	\section{Glossaire}
-	
-	\textbf{Requête d'interruption} : (IRQ : interrupt request) Signal matériel indiquant qu'une interruption est requise. \\ ~ \\
-	
-	\textbf{Polling} : approche d'ordonnancement dans laquelle le logiciel répète un test sur une condition pour déterminer s'il doit exécuter une tache.\cite{ARM_book} \\ ~ \\
-	
-	Une\textbf{ machine état ou automate fini} est une construction mathématique abstraite, susceptible d'être dans un nombre fini d'\textit{états} , mais étant un moment donné dans un seul état à la fois. Le passage d'un état à un autre ce fait par une \textit{transition}. 
-	
-	\newpage
-	
-	\section{Le langage C}
-	Le langage C est un langage combiné, il a les caractéristiques des langages évolués (boucles itératives etc.) associé à des fonctionnalités des langages assemblés (décalage de bit, adressage indirect généralisé etc.). C'est la combinaison de ces deux caractéristiques qui font la force du langage\cite{Monteil2012}. Sa proximité avec l'assembleur le rendant très efficace, il est ainsi devenu le langage indispensable dans la programmation des applications comme l'automatique, la robotique, les OS ect. Cette même proximité impose peu de contraintes à l'utilisateur sur la structure de son programme. Aussi, il est possible d'écrire des fonctions avec plusieurs points de sorties, ou encore, d'échapper à une boucle avant son terme. Là où certains trouveront une grande souplesse, les critiques le considérerons trop permissif. On notera qu'un certain nombre d'organismes officiels proposent un ensemble de règles visant, tout en conservant son efficacité, à éviter les problèmes liés à une programmation peu soignée. L'Agence National de la Sécurité des Systèmes Informatiques française (ANSSI) propose un rapport complet, \textit{Règles de programmation pour le développement sécurisé de logiciels en langage C}\cite{ANSSI2021}, visant à "favoriser la production de logiciels C plus sécurisés, plus sûrs, d’une plus grande robustesse et portables". Il servira de référence durant ce projet.
-	
-	\newpage
-	
-	\section{Programme de base} % touver un meilleur titre
-	
-	Dans un premier temps un nouveau projet est créé de type "GCC C ASF Board project". Microchip studio génère alors une arborescence de fichiers dont un main.c. Ce dernier est étudié de manière globale puis affinée par étape dans la section suivante.
-	
-	\subsection{Vue globale}
-	Cette partie détaille le fonctionnement du programme de base. 
-	
-	
-	\begin{lstlisting}[style=CStyle]
-		#include <asf.h>
-		
-		int main (void)
-		{
-			system_init();
-			
-			/* Insert application code here, after the board has been initialized. */
-			
-			/* This skeleton code simply sets the LED to the state of the button. */
-			while (1) {
-				/* Is button pressed? */
-				if (port_pin_get_input_level(BUTTON_0_PIN) == BUTTON_0_ACTIVE) {
-					/* Yes, so turn LED on. */
-					port_pin_set_output_level(LED_0_PIN, LED_0_ACTIVE);
-				} else {
-					/* No, so turn LED off. */
-					port_pin_set_output_level(LED_0_PIN, !LED_0_ACTIVE);
-				}
-			}
+	/* This skeleton code simply sets the LED to the state of the button. */
+	while (1) {
+		/* Is button pressed? */
+		if (port_pin_get_input_level(BUTTON_0_PIN) == BUTTON_0_ACTIVE) {
+			/* Yes, so turn LED on. */
+			port_pin_set_output_level(LED_0_PIN, LED_0_ACTIVE);
+		} else {
+			/* No, so turn LED off. */
+			port_pin_set_output_level(LED_0_PIN, !LED_0_ACTIVE);
 		}
 	\end{lstlisting}
 	La première ligne permet d'inclure la  bibliothèque asf et ainsi de profiter du niveau d'abstraction mis à disposition par Microship. La suivante, \texttt{int main ()} bien connue des développeurs C, est le point d'entré du programme. C'est la première fonction exécutée. La ligne 5 \texttt{system\_init();} a été générée automatiquement par le logiciel à la création du projet. C'est elle qui nous offre ce niveau d'abstraction en initialisant les horloges et les entrées/sorties etc. Elle est spécifique à la cible utilisée, dans notre cas la carte Microchip SAMD21 Xplained Pro. La ligne 10 correspond à l'implémentation d'une boucle infinie. Cette dernière permet de lire l'état du bouton (ligne 12) en "continu". La condition suivante d’éclanche le résultat souhaité : allumage ou extinction de la LED0.

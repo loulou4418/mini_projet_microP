@@ -35,6 +35,8 @@
 
 int main (void)
 {
+	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_TC6);
+
 	system_init();
 
 	/* Insert application code here, after the board has been initialized. */
