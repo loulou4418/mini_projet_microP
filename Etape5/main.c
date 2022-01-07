@@ -34,6 +34,7 @@
 #include <asf.h>
 #include "conf_projet.h"
 #include "calcul_gabarit.h"
+#include "PWM.h"
 
 uint16_t g_VPalier;
 
@@ -57,13 +58,12 @@ int main (void)
 	
 	config_PWM ();
 
-	//Faire l'interruption
 	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_TC6);
 
 
 	/* Insert application code here, after the board has been initialized. */
 	
-	set_VPalier(2500);
+	set_VPalier(5000);
 
 	/* This skeleton code simply sets the LED to the state of the button. */
 	while (1) {
@@ -86,13 +86,25 @@ void procedure_traitement_IT(void){
 }
 
 void TC6_Handler(void){
-	Tc *ptr_TC = TC6;
-
+	uint16_t Vconsigne ;
+	Tc *ptr_TC;
+	Dac * ptr_DAC;
+	
+	/* write port to check */
 	procedure_traitement_IT();
 	
-	Dac * ptr_DAC = DAC;
-	ptr_DAC -> DATA.reg = calcul_gabarit ((get_VPalier()*DAC_RESOLUTION)/V_MAX);
-
+	/* Calcul gabarit */
+	Vconsigne = calcul_gabarit (get_VPalier());
+	
+	/* Write Dac to check */
+	ptr_DAC = DAC;
+	ptr_DAC -> DATA.reg = Vconsigne*DAC_RESOLUTION/V_MAX;
+	
+	/* Control moteur */
+	write_PWM(Vconsigne);
+	
+	/* clear flag interrupt timer */
+	ptr_TC = TC6;
 	ptr_TC->COUNT16.INTFLAG.reg = TC_INTFLAG_MC0;
 }
 
