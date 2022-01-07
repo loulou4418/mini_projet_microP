@@ -183,7 +183,7 @@ int main (void)
 	
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=12cm]{figure/mode Waveform.jpg}
+		\includegraphics[width=12cm]{mode Waveform.jpg}
 		\caption{Mode de fonctionnement en WAVEFORM pour les compteurs}
 		\label{pic1}
 	\end{figure}
@@ -192,7 +192,7 @@ int main (void)
 	
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=12cm]{figure/Match Frequency Operation.jpg}
+		\includegraphics[width=12cm]{Match Frequency Operation.jpg}
 		\caption{Fonctionnement timer configuré en MFRQ}
 		\label{pic2}
 	\end{figure}
@@ -204,7 +204,7 @@ int main (void)
 	
 	\begin{figure}[htbp]
 		\centering
-		\includegraphics[width=12cm]{figure/prescaler.jpg}
+		\includegraphics[width=12cm]{prescaler.jpg}
 		\caption{Configuration du compteur TC}
 		\label{pic3}
 	\end{figure}
@@ -235,7 +235,7 @@ int main (void)
 	La figure ci-dessous présente la génération des signaux de l'horloge périphérique et de l'horloge principale. Le Generic Clock Controller est composé de 9 générateurs et de multiplexeurs.\\
 	\begin{figure}[htbp]
 		\centering
-		\includegraphics[width=12cm]{figure/GENCLK_bloc.jpg}
+		\includegraphics[width=12cm]{GENCLK_bloc.jpg}
 		\caption{Fonctionnement du Generic Clock Controller}
 		\label{pic3}
 	\end{figure}
@@ -246,7 +246,7 @@ int main (void)
 	Le détail de Generic Clock Generator Control (GENCTRL) est donné dans la figure ci-dessous:\\
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=12cm]{figure/GENCTRL.jpg}
+		\includegraphics[width=12cm]{GENCTRL.jpg}
 		\caption{Configuration des différents bits du GENCTRL}
 		\label{pic3}
 	\end{figure}
@@ -268,7 +268,7 @@ int main (void)
 	Ce registre permet de choisir parmis les 9 générateurs décrit précédemment. Le détail de Generic Clock Control (CLKCTRL) est donné dans la figure ci-dessous:
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=12cm]{figure/CLKCTRL.jpg}
+		\includegraphics[width=12cm]{CLKCTRL.jpg}
 		\caption{Configuration des différents bits du CLKCTRL}
 		\label{pic3}
 	\end{figure}
@@ -280,6 +280,24 @@ int main (void)
 	\subsubsection{Configuration du TC6} 
 	
 	\newpage
+	
+	
+	\section{Fonction sous interruption}
+	Les interruptions sont des outils essentiels pour concevoir des systèmes réactifs (en: responsive)  dès lors qu'ils doivent exécuter des opérations logicielles et matérielles simultanément. Avant de présenter le fonctionnement et la configuration du système d'interruption du Cortex-M il est préférable de donner un aperçu du problème. \\
+	\subsection{Présentation du problème}
+	L'environnement avec lequel interagi le microcontrôleur est dit asynchrone. Il ne peut à priori par connaître l'instant d'apparition d'un événement. Il est alors obligé de le scruter fréquemment pour être averti rapidement d'un changement. C'est précisément ce que fait l'étape 1. La lecture du bouton est placée dans une boucle infinie, si l'utilisateur appui sur ce denier l'état de la led est modifié. Bien que ce programme soit inefficace, il fonctionne bien et offre une faible latence. Ce mode de fonctionnement est appelé "polling". Le problème survient dès lors qu'une tâche logicielle est ajoutée au programme. Le processeur n'est plus seulement occupé à contrôler l'état du bouton mais également à exécuter une autre partie du programme. La réactivité n'est alors plus garantie. Dans certains cas, si la tâche logicielle est importante, le changement d'état du bouton pourra être invisible pour le programme.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.9\linewidth]{polling_task}
+		\caption{Ordonnancement tâches avec polling}
+	\end{figure}
+	La figure ci-dessus représente l'exécution d'un programme comme celui de l'étape 1 auquel une seconde tâche a été ajoutée (tâche 2). Aucune échelle précise n'est choisi le but étant une simple présentation fonctionnelle. Deux cas sont illustrés dans cet exemple. Le premier, à gauche, correspond au bon déroulement, le processeur lit de manière successive l'état du switch (étape 1), lorsque une lecture vaut '1' l'état de la led est mis à '1' et même chose pour '0'. Une petite (latence) est présente mais elle sera généralement négligée. Dans le second cas, à droite, la tâche 2 est en cours d'exécution est empêche la lecture du bouton. Une fois terminée la mise à jours de la led peut s'opérer comme précédement. L'exécution de la tâche 2 a générer un retard qui n'est cette fois-ci plus négligeable du point de vue de l'utilisateur. Si la tâche 2 avait durée un instant de plus ale système n'aurait pas réagi à la stimulation. Un tel cas ne doit, en aucun cas, se produire pour un système dont la sécurité est critique.\\
+	En pratique ce problème survient fréquemment. Les interactions utilisateurs, tel que l'appuis sur un bouton, sont relativement lentes comparés à la vitesse de fonctionnement des processeurs. Un "polling" pourra suffire dans certains cas. Mais pour ce qui est des événements matériels, comme un timer ou un protocole série, la situation est plus critique. Il n'y a alors pas d'autres solutions que d'utiliser une interruption. De manière générale les logiciels utilisant des interruptions fonctionnent plus efficacement que ceux basés sur le "pooling". Aucun temps n'est perdu à contrôler l'apparition d'un événement. L'approche par déclenchement sur évènements (en: even-trigger) offre également une meilleur réactivité. Des ressources pourront alors être économisées en baissant la fréquence ne fonctionnement. \cite{ARM_book}
+	\subsection{Fonctionnement d'une interruption }
+	Une interruption est définie comme une suspension temporaire de l'exécution d'un programme informatique par le microprocesseur afin d'exécuter un programme prioritaire (routine d'interruption). La dite suspension est déclenchée par une source externe. \\
+	La gestion d'une interruption s'effectue comme tel : pause du programme, sauvegarde du contexte, identification de la routine d'interruption à exécuter (en fonction de ma source), exécution de la routine et rétablissent du contexte. Ces actions sont gérées par le NVIC, Nest Vectored Interrupt Controler faisant l'interface entre les périphériques et le CPU.
+	
+	
 	
 	\bibliography{lib}{}
 	\bibliographystyle{unsrt}
