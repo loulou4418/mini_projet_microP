@@ -18,7 +18,7 @@
 \definecolor{mGreen}{rgb}{0,0.6,0}
 \definecolor{mGray}{rgb}{0.5,0.5,0.5}
 \definecolor{mPurple}{rgb}{0.58,0,0.82}
-\definecolor{backgroundColour}{rgb}{0.95,0.95,0.92}
+\definecolor{backgroundColour}{rgb}{0.95,0.95,0.95}
 
 \lstdefinestyle{CStyle}{
 	backgroundcolor=\color{backgroundColour},   
@@ -37,8 +37,10 @@
 	showstringspaces=false,
 	showtabs=false,                  
 	tabsize=2,
-	language=C
-}          
+	language=C,
+	morekeywords={uint32_t, uint16_t, uint8_t, Tc, Dac, Port, inline,state_t}
+}
+
 
 \title{\textbf{projet} \\ document}
 
@@ -229,7 +231,7 @@ int main (void)
 	La valeur chargée dans le registre CC0 sera donc 3999.
 	
 	\subsection{Configuration TC6}
-	Cette partie détaillé les configurations nécessaires à la génération d'un signal carré de 1kHz grâce à TC6. Les éléments suivants seront configuré : le generic clock controller, le power manager, un port d'entrée sortie et finalement TC6.
+	Cette partie détaille les configurations nécessaires à la génération d'un signal carré de 1kHz grâce à TC6. Les éléments suivants seront configuré : le generic clock controller, le power manager, un port d'entrée sortie et finalement TC6.
 	\subsubsection{Configuration du GCLK} 
 	Chaque périphérique de la carte SAMD21 nécessite une horloge de fonctionnement interne. Pour notre périphérique du Timer, il s’agit de GCLK\_TC6 (Generic clock for TC6).\\
 	La figure ci-dessous présente la génération des signaux de l'horloge périphérique et de l'horloge principale. Le Generic Clock Controller est composé de 9 générateurs et de multiplexeurs.\\
@@ -283,21 +285,326 @@ int main (void)
 	
 	
 	\section{Fonction sous interruption}
-	Les interruptions sont des outils essentiels pour concevoir des systèmes réactifs (en: responsive)  dès lors qu'ils doivent exécuter des opérations logicielles et matérielles simultanément. Avant de présenter le fonctionnement et la configuration du système d'interruption du Cortex-M il est préférable de donner un aperçu du problème. \\
+	Les interruptions sont des outils essentiels pour concevoir des systèmes réactifs (en: responsive)  dès lors qu'ils doivent exécuter des opérations logicielles et matérielles simultanément. Avant de présenter le fonctionnement et la configuration du système d'interruption du Cortex-M il est préférable de donner un aperçu du problème.
 	\subsection{Présentation du problème}
 	L'environnement avec lequel interagi le microcontrôleur est dit asynchrone. Il ne peut à priori par connaître l'instant d'apparition d'un événement. Il est alors obligé de le scruter fréquemment pour être averti rapidement d'un changement. C'est précisément ce que fait l'étape 1. La lecture du bouton est placée dans une boucle infinie, si l'utilisateur appui sur ce denier l'état de la led est modifié. Bien que ce programme soit inefficace, il fonctionne bien et offre une faible latence. Ce mode de fonctionnement est appelé "polling". Le problème survient dès lors qu'une tâche logicielle est ajoutée au programme. Le processeur n'est plus seulement occupé à contrôler l'état du bouton mais également à exécuter une autre partie du programme. La réactivité n'est alors plus garantie. Dans certains cas, si la tâche logicielle est importante, le changement d'état du bouton pourra être invisible pour le programme.
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.9\linewidth]{polling_task}
+		\includegraphics[width=\linewidth]{polling_task}
 		\caption{Ordonnancement tâches avec polling}
 	\end{figure}
-	La figure ci-dessus représente l'exécution d'un programme comme celui de l'étape 1 auquel une seconde tâche a été ajoutée (tâche 2). Aucune échelle précise n'est choisi le but étant une simple présentation fonctionnelle. Deux cas sont illustrés dans cet exemple. Le premier, à gauche, correspond au bon déroulement, le processeur lit de manière successive l'état du switch (étape 1), lorsque une lecture vaut '1' l'état de la led est mis à '1' et même chose pour '0'. Une petite (latence) est présente mais elle sera généralement négligée. Dans le second cas, à droite, la tâche 2 est en cours d'exécution est empêche la lecture du bouton. Une fois terminée la mise à jours de la led peut s'opérer comme précédement. L'exécution de la tâche 2 a générer un retard qui n'est cette fois-ci plus négligeable du point de vue de l'utilisateur. Si la tâche 2 avait durée un instant de plus ale système n'aurait pas réagi à la stimulation. Un tel cas ne doit, en aucun cas, se produire pour un système dont la sécurité est critique.\\
-	En pratique ce problème survient fréquemment. Les interactions utilisateurs, tel que l'appuis sur un bouton, sont relativement lentes comparés à la vitesse de fonctionnement des processeurs. Un "polling" pourra suffire dans certains cas. Mais pour ce qui est des événements matériels, comme un timer ou un protocole série, la situation est plus critique. Il n'y a alors pas d'autres solutions que d'utiliser une interruption. De manière générale les logiciels utilisant des interruptions fonctionnent plus efficacement que ceux basés sur le "pooling". Aucun temps n'est perdu à contrôler l'apparition d'un événement. L'approche par déclenchement sur évènements (en: even-trigger) offre également une meilleur réactivité. Des ressources pourront alors être économisées en baissant la fréquence ne fonctionnement. \cite{ARM_book}
+	La figure ci-dessus représente l'exécution \footnote{Aucune échelle précise n'est choisi le but étant une simple présentation fonctionnelle.} d'un programme comme celui de l'étape 1 auquel une seconde tâche a été ajoutée (tâche 2).  Deux cas sont illustrés dans cet exemple. Le premier, à gauche, correspond au bon déroulement, le processeur lit de manière successive l'état du switch (étape 1), lorsque une lecture vaut '1' l'état de la led est mis à '1' et même chose pour '0'. Une petite (latence) est présente mais elle sera généralement négligée. Dans le second cas, à droite, la tâche 2 est en cours d'exécution est empêche la lecture du bouton. Une fois terminée la mise à jours de la led peut s'opérer comme précédement. L'exécution de la tâche 2 a générer un retard qui n'est cette fois-ci plus négligeable du point de vue de l'utilisateur. Si la tâche 2 avait durée un instant de plus le système n'aurait pas réagi à la stimulation. Un tel cas ne doit, en aucun cas, se produire pour un système dont la sécurité est critique.\\
+	En pratique ce problème survient fréquemment. Les interactions utilisateurs, tel que l'appuis sur un bouton, sont relativement lentes comparés à la vitesse de fonctionnement des processeurs. Un "polling" pourra suffire dans certains cas. Mais pour ce qui est des événements matériels, comme un timer ou un protocole série, la situation est plus critique. Il n'y a alors pas d'autres solutions que d'utiliser une interruption. De manière générale les logiciels utilisant des interruptions fonctionnent plus efficacement que ceux basés sur le "pooling". Aucun temps n'est perdu à contrôler l'apparition d'un événement. L'approche par déclenchement sur évènements (en: even-trigger) offre également une meilleur réactivité. \cite{ARM_book}
 	\subsection{Fonctionnement d'une interruption }
 	Une interruption est définie comme une suspension temporaire de l'exécution d'un programme informatique par le microprocesseur afin d'exécuter un programme prioritaire (routine d'interruption). La dite suspension est déclenchée par une source externe. \\
 	La gestion d'une interruption s'effectue comme tel : pause du programme, sauvegarde du contexte, identification de la routine d'interruption à exécuter (en fonction de ma source), exécution de la routine et rétablissent du contexte. Ces actions sont gérées par le NVIC, Nest Vectored Interrupt Controler faisant l'interface entre les périphériques et le CPU.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.9\linewidth]{NVIC}
+		\caption{Schéma bloc NVIC}
+		\label{fig:NVIC}
+	\end{figure}
 	
 	
+	Lorsqu'une interruption x se produit, la demande d'interruption (IRQ) est envoyée au NVIC. Si le NVIC accepte la demande, l'étape suivante du NVIC consiste à trouver l'adresse de départ de la routine d'interruption (@ISR). Cette adresse est stockée dans la table de vecteurs d'interruption (IVT). Le NVIC utilise le numéro d'interruption x pour calculer l'adresse de l'exception dans la table des vecteurs d'interruption. Il utilise ensuite le contenu de cette adresse mémoire pour exécuter le gestionnaire d'exception. Le compteur de programme est alors chargé avec l'adresse de l'ISR et le CPU commence à exécuter la routine d'exception.
+	Un rappel du vocabulaire utilisé dans la figure \ref{fig:NVIC}.
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{|c|l|}
+			\hline
+			@ & adresse mémoire \\
+			\hline
+			IRQ & Interrupt Service Routine \\
+			\hline
+			NVIC & Nest Vectored Interrupt Controler \\
+			\hline
+			IVT & Interrupt Vector table \\
+			\hline
+			ISR & Interrupt Service Rotine \\
+			\hline
+		\end{tabular}
+	\caption{Terminologie mécanisme d'interruption}
+	\end{table}
+	La table des vecteurs d'interruptions, est une structure de données et, comme son nom l'indique, un tableau contenant des vecteurs. En programmation embarquée, un vecteur désigne une adresse mémoire. Par conséquent, une table de vecteurs est une table contenant des adresses mémoire. \textbf{La table des vecteurs d'interruption contient les adresses (pointeurs de fonction) des routines d'interruption et des fonctions de gestion des exceptions.} Les exceptions désignent les évènements en mesure d'interrompre le déroulement normal du programme pour effectuer une courte tache. Les interruptions sont donc partie des exceptions. Elles ne sont pas les seules le processeur lui même peut déclencher le mécanisme d'exception lorsque on lui demande de faire quelque chose qu’il ne parvient pas à faire. Par exemple la lecture d'un mot de 32 bits à une adresse impaire provoquera une exception à l'exécution.
+	
+	\subsection{Configuration interruption}
+	Pour qu'une interruption se produise il faut que le périphérique soit configuré de sorte à réagir à l'occurrence d'un événements spécifique. Dans le contexte du projet nous devons calculer le gabarit toutes les 1 ms. Cette partie présente la configuration à effectuer pour que le timer TC6 déclenche une routine d'interruption contenant la fonction calcul gabarit. Elle détaillera également l'autorisation de l'interruption par le NVIC.
+	\subsubsection{Timer TC6}
+	L'activation de l'interruption sur le périphérique TC6 est documentée en détaille dans la datasheet. \cite{data} Chaque source d'interruption est associée à un drapeau d'interruption. Le drapeau d'interruption (en: interrupt flag), dans le registre (INTFLAG), est activé lorsque la condition d'interruption en vrai. Chaque interruption peut être activée individuellement en écrivant un '1' au bit correspondant dans le registre d'activation Interrupt Enable Set (INTENSET) et désactivée en écrivant un '1' au bit correspondant dans le registre de désactivation Interrupt Enable Clear (INTENCLR).	Le registre INTENSET se présente comme tel :
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=\linewidth]{reg_intenset}
+		\caption{Registre INTENSET}
+		\label{fig:INTENSET}
+	\end{figure}
+	Ayant programmé le timer en mode MFRQ dans la partie précédente, seul le bit 4 nous intéresse. Il est chargé à '1' pour activer l'interruption sur correspondance de COUNT et MC0. L'implémentation en C est intuitive :
+	\begin{lstlisting}[style=CStyle]
+	void configure_TC6_IT(void){
+		Tc *ptr_TC = TC6;
+		ptr_TC->COUNT16.INTENSET.reg = TC_INTFLAG_MC0;
+	}
+	\end{lstlisting}
+	
+	Comme l'indique la datasheet après la configuration du périphérique il faut activer l'interruptions correspondante dans NVIC.
+	\begin{quotation}
+		"The interrupt request line is connected to the Interrupt Controller. In order to use interrupt requests of this peripheral,
+	the Interrupt Controller (NVIC) must be configured first." \cite{data}(page 557)
+	\end{quotation}
+	
+	\subsubsection{NVIC}
+	Le NVIC est un élément interne au processeur. La documentation de Microchip donne pour chaque périphérique le numéro d'interruption associée mais renvoit à la documentation de Arm pour la configuration du NVIC. Le numéro du TC6 est 21. Comme nous avons pu l'évoquer plus haut le NVIC peut accepter ou non les interruptions provenant des périphériques. Il consulte pour cela un registre nommé NVIC\_ISER contenant un seul champ de 32 bits SETENA littéralement set enable. L'extrait de la documentation \cite{ARMv6} Arm ci-dessous nous donne la valeur des bits à charger.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\linewidth]{ISER}
+		\caption{Registre NVIC\_ISER ARMv6-M}
+		\label{fig:ISER}
+	\end{figure}
+	Ce registre permet de lire l'activation ou d'activer l'interruption sur chaque ligne. A noter : il faut utiliser un autre regiqtre pour la désactivation, écrire un '0' n'aura aucun effet. \textbf{Nous devons dans notre cas placer un '1' sur le bit 21.} Cette configuration est grandement simplifiée par l'ASF. Mais il est essentiel de comprendre et de retenir qu'une activation supplémentaire au périphérique est nécessaire. Le code ajouter à la fonction main est le suivant :
+	\begin{lstlisting}[style=CStyle]
+		system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_TC6);\end{lstlisting}
+	L'appel de cette fonction est simple et permet l'abstraction du matériel. Le paramètre passé est le numéro d'interruption \texttt{TC6\_IRQn} comme le montre la définition dans \texttt{system\_interrupt\_features.h}
+	\begin{lstlisting}[style=CStyle]
+	SYSTEM_INTERRUPT_MODULE_TC6 = TC6_IRQn\end{lstlisting}
+	\texttt{TC6\_IRQn} est défini plus haut et dépend de la cible utilisée dans notre cas le SAMD21J18A. 
+	\begin{lstlisting}[style=CStyle]
+	 TC6_IRQn                 = 21 \end{lstlisting}
+	Sa valeur est bien 21. Nous venons d'observer la cohérence entre la datasheet et l'ASF. Pour finaliser le raisonnement regardeons l'implémentation de la fonction \texttt{system\_interrupt\_enable()}.
+	\begin{lstlisting}[style=CStyle]
+	static inline void system_interrupt_enable(
+	const enum system_interrupt_vector vector)
+	{
+		NVIC->ISER[0] = (uint32_t)(1 << ((uint32_t)vector & 0x0000001f));
+	}\end{lstlisting}
+	Cette fonction est particulièrement intéressante d'un point de vue pédagogique par l'utilisation de static, inline et du masquage sur le vecteur. D'un point de vue fonctionnel, elle place un '1' décalé du numéro d'interruption sur le registre ISER de NVIC. C'est précisément ce qui doit être fait pour activer les interruptions comme le montre le figure \ref{fig:ISER}.
+	
+	\subsubsection{Routine}
+	La routine d'interruption est la fonction appelée automatiquement par le NVIC lors d'un événement. L'adresse stocké à l'indice \texttt{TC6\_IRQn} de la table des vecteurs d'interruption coreposndant à cette fonction est chargée dans PC. Elle est exécutée puis le PC retourne à sa valeur d'origine. La définition de \texttt{TC6\_Handler} est réalisée par l'Asf, il n'est pas nécessaire de déclarer son prototype. \\
+	Dans la suite du projet la fonction calcul gabarit est exécutée par la routine d'interruption. N'étant pas encore développée, le changement d'état de PB6, jouera le rôle de témoin pour valider le bon déclenchement toutes les 1ms.
+	\begin{lstlisting}[style=CStyle]
+	void procedure_traitement_IT(void){
+		Port *ptr_Port = PORT;
+		ptr_Port->Group[1].OUTTGL.reg = PORT_PB06;
+	}
+	
+	void TC6_Handler(void){
+		Tc *ptr_TC = TC6;
+				
+		procedure_traitement_IT();
+		
+		ptr_TC->COUNT16.INTFLAG.reg = TC_INTFLAG_MC0;
+	}
+	\end{lstlisting}
+	Cette fonction d'interruption témoin commence par la déclaration du pointeur TC6. Mais si cette variable ne sert qu'à la dernière ligne il est impératif de l'initialisation au début de la fonction comme l'indique la recommandation 53 de guide de référence de l'ANSSI \cite{ANSSI2021}. Ensuite, la procédure de traitement est appelée. Elle consiste à inverser (en:toggle) l'état du pin PB6. Pour finir, le drapeau d'interruption est remis à zéro grâce au registre Flag Status and Clear
+	(INTFLAG) dont la structure est identique à celle de la figure \ref{fig:INTENSET}. Il peut être intéressant de noter que la fonction \texttt{procedure\_traitement\_IT();} n'étant appelée qu'une seule fois dans le programme sera insérée directement dans le code en assembler. C'est l'équivalent d'un \texttt{inline} réalisé automatiquement par le compilateur.
+	\\
+	\hl{ajouter code assembler pour le prouver et capture d'ecran frequence IT}\\
+	\newline
+	\indent
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.5\linewidth]{defaut}
+		\caption{Oscillogramme vérification procédure interruption}
+	\end{figure}
+	La fréquence du signal observé est de XXHz. 
+	
+	Cette partie a permis de soulever un problème lié à une programmation conjointe logiciel matériel et de proposer un solution, les interruptions. Le fonctionnement globale du système d'interruption des microcontrôleurs basés sur un Cortex-M a pu être détaillé. La configuration à travers un exemple concret utilisant le TC6 a finalement illustré ces explications. 
+	
+	
+	
+	\newpage
+	\section{Implémentation fonction calcul gabarit}
+	Cette partie présente la conception de la fonction calcul gabarit conformément au cahier des charges donné dans le sujet. Elle a pour fonction de déterminer la vitesse de rotation du moteur, comprise entre 0 et 5000 tr/min, en fonction du temps. Le gabarit se décompose en trois phases :
+	\begin{itemize}
+		\item accélération d'une durée de 128 ms
+		\item vitesse constante d'une durée de 512 ms
+		\item décélération d'une durée de 128 ms
+	\end{itemize}
+	La valeur du palier correspondant à la vitesse constante est un paramètre variable fournis par un bloc externe avec une précision de 10 tr/min. Pour simplifier le problème elle ne pourra être modifiée au cours d'un cycle. A ce niveau dans le projet les blocs externes ne sont pas encore développés. Pour facilité l'observation lors de tests le gabarit sera généré en boucle. Un état Repos doit être ajouté pour les délimiter, sa durée sera de 64 ms.
+	\subsection{Conception fonctionnelle}
+	L'étape de conception fonctionnelle a pour objectif de définir une solution en ne considérant que l'aspect fonctionnel et sans tenir compte des contraintes technologiques. Il est donc question de trouver une solution en mesure de générer \textbf{le gabarit constitué des quatre étapes : repos, accélération, constante et décélération.} Ainsi la description sous forme d'un automate à état finis s'impose par la séquentialité du problème. La traduction donne le résultat suivant :
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.76\linewidth]{calcul_gabarit_FSM}
+		\caption{Description fonctionnelle calcul gabarit (FSM)}
+		\label{fig:FSM}
+	\end{figure}
+	Cet automate est constitué des quatre états repos, accélération, constante et décélération et de leur transition respective. La variable \texttt{Vpalier} correspond au paramètre d'entrée de la fonction. Le résultat de l'exécution, placé dans \texttt{Vconsigne}, devra être communiqué au reste du système. 
+
+	\newpage
+	
+	\subsection{Implémentation logicielle}
+	La conception fonctionnelle précédente a permis de clarifié le problème. La première étape de la traduction en C est la déclaration des constantes. Elle se fait par l'instruction préprocesseur define ayant pour fonction de remplacer les instances suivantes de l'identifieur par la suite de lexèmes\footnote{Unité minimale de signification appartenant au lexique (Larousse)}. \cite{KRBook}
+	\begin{lstlisting}[style=CStyle] 
+	#define identifieur suite-de-lexemes \end{lstlisting}
+	Ce procédé est utilisé pour définir les constantes utilisées ci-dessous. Le code C est le suivant :
+	\begin{lstlisting}[style=CStyle] 
+	#define TMontee 128
+	#define TPalier 512
+	#define TDescente 128
+	#define TRepos 64\end{lstlisting}
+	Les valeurs numériques proviennent directement du cahier des charges.
+	
+	Avant de traduire l'automate figure \ref{fig:FSM} il est important de définir précisément le type des variables utilisées.
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{|l|c|c|c|c|}
+			\hline
+			nom	 		& min	& max & type générique & type C \\ \hline
+			temps		& 0		& 512	& entier & uint16\_t \\ \hline
+			Vconsigne	& 0		& 5000	& entier & uint16\_t \\ \hline
+			Vpalier		& 0		& 5000	& entier & uint16\_t \\
+			\hline
+		\end{tabular}
+		\caption{Types des variables fonction calcul gabarit}
+	\end{table}
+	Le tableau ci dessus rassemble les informations permettant de choisir efficacement les types des variables. Elles sont toutes les trois entières, leur valeur minimum est supérieur à zéro et leur maximum compris entre 255 et 65535. Le type C correspondant est donc nécessairement uint16\_t. Il existe une autre variable implicite à l'implémentation d'un automate. C'est l'état courant \texttt{state} de type énumération. Il peut prendre pour valeur chacun des états repos, accélération, constante et décélération. Sa définition en langage C est la suivante :
+	\begin{lstlisting}[style=CStyle] 
+	enum state_t{Repos,Accel,Vconst,Decel};\end{lstlisting}
+	Le type énumération correspond à un entier dont la taille peut contenir le nombre d'élément. Par défaut le premier élément vaut 0, et les suivants sont supérieures de 1 par rapport à la	valeur de la constante précédente. Il est possible d'affecter une valeur manuellement. Le guide des bonnes de pratiques de l'ANSSI\cite{ANSSI2021} indique par la règle 68 qu'il ne faut pas mélanger des constantes explicites et implicites dans une énumération pour éviter tout comportement indéterminé. Toute tentative d'affectation à une valeur non définie dans l'énumération provoquera une erreur à la compilation. Dans notre cas nous laisserons la définition à la charge du compilateur. Tel qu'est construit la machine état il est nécessaire de sauvegarder les valeurs des variables d'une exécution à l'autre. Il faudra donc ajouter le qualificateur \texttt{static}.\newline \indent
+	Une fois les variables et constantes déclarées le corps de la fonction peut être implémenté. Il convient de convertir la machine état figure \ref{fig:FSM} en langage C. Cela se fait simplement autour d'un "\texttt{switch case}". Il est nécessaire de déclarer la variable \texttt{state} de type \texttt{state\_t}. Un cas par défaut a été ajouté à la description fonctionnelle pour couvrir les cas d'erreur. Lors d'une exécution normale la variable \texttt{state} ne peut prendre d'autres états que ceux déclarés dans l'énumération. Si toutefois, pour une raison inconnue, elle venait à prendre une autres valeurs, le programme se trouverait dans un état indéterminé et y resterait. Avec le cas défaut le programme peut se trouver dans un état non définit, mais il sera alors remis dans son état d'origine et l'exécution pourra continuée. L'implémentation en C est la suivante :
+	
+	
+	\newpage
+
+	
+	\begin{lstlisting}[style=CStyle]
+/* file : calcul_gabarit.c */
+
+uint16_t calcul_gabarit (uint16_t VPalier){
+
+	static uint16_t Temps = 0;
+	static enum state_t state = Repos;
+	static uint16_t Vconsigne = 0;
+	
+	switch (state)
+	{
+		case Repos :
+			Vconsigne = 0;
+			Temps ++;
+			if(Temps >= 64){
+			state = Accel;
+			Temps = 0;
+			}
+			break;
+	
+		case Accel :
+			if(Temps>=TMontee){
+			state = Vconst;
+			Temps = 0;
+			Vconsigne = VPalier;
+			}
+			else{
+			Temps ++;
+			Vconsigne = (VPalier * Temps) / TMontee;
+			}
+			break;
+	
+		case Vconst :
+			if (Temps>=TPalier){
+			state = Decel;
+			Temps = 0;
+			}
+			else{
+			Temps ++;
+			}
+			break;
+	
+		case Decel:
+			if(Temps >= TDescente){
+			state = Repos;
+			Temps = 0;
+			Vconsigne = 0;
+			}
+			else{
+			Temps ++;
+			Vconsigne = (VPalier * (TDescente - Temps)) / TDescente;
+			}
+			break;
+			
+		default :
+			state = Repos;
+			Temps = 0;
+			Vconsigne =0;
+			break;
+		}
+		return Vconsigne;
+	}
+}	\end{lstlisting}
+
+	\newpage
+	\subsection{Test calcul gabarit et configuration DAC}
+	La fonction calcul gabarit a été implémenté et doit donc être testée. Le résultat retourné est \texttt{Vconsigne}, dont la valeur analogique est comprise entre 0 et 5000. Pour visualiser son évolution dans le temps on peut s'appuyer sur un périphérique présent dans le SAMD21, le convertisseur numérique vers analogique (DAC : Digital Analog Converter). Ainsi il sera possible de visualiser le gabarit générer sous sa forme temporel tel qu'il a été décrit initialement dans le cahier des charges. Le DAC converti une valeur numérique en tension. Celui présent dans le microcontrôleur utilisé dispose d'une voix 10 bits sur 3,3V, soit une précision de 3,32mV. Sa représentation structurelle sous forme d'un diagramme bloc est la suivante :
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.75\linewidth]{DAC}
+		\caption{Description diagramme bloc DAC}
+	\end{figure}
+	Les données à convertir transitent sur le bus APB BRIDGE C et doivent être dans le registre \texttt{DATA} ou \texttt{DATABUFER}. Ils correspondent respectivement à la valeur actuellement convertie et à la prochaine valeur convertie. Dans notre cas nous n'utiliserons que le registre \texttt{DATA}. Sa valeur est ensuite transmise à l'unité de conversion 10 bits dont la tension de référence, tension maximum, peut être sélectionnée parmi plusieurs sources. Le résultat sorte finalement sur une sortie interne, un buffer capable de débiter un courant plus important. Comme pour les autres périphériques un certain nombre de registres sont à disposition pour configurer ses nombreuses fonctionnalités.
+	
+	\paragraph{Configuration du registre CTRLA} ~~\\
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=12cm]{DAC_CTRLA}
+		\caption{Description registre DAC CTRLA}
+	\end{figure}
+\begin{itemize}
+	\item \textbf{SWRST} - Software Reset - Ce champ permet de remettre les registres du DAC dans leur état initial. Nous ne souhaitons pas faire cela, on écrira dans le registre \textbf{0 \textless \textless 0}\\
+	\item \textbf{ENABLE} - Enable DAC Controller - Ce champ permet d'activer le Dac il faut donc écrire \textbf{1 \textless \textless 1} dans le registre.\\
+	\item \textbf{RUNSTDBY} - Run in Standby - Ce champ permet d'activer ou de désactiver le buffer du DAC et mode veille. Dans notre cas cela a pet d'importance se bit peut être mis à 1 le laisser activé dans tous les cas : \textbf{1 \textless \textless 2}.
+\end{itemize}
+
+\paragraph{Configuration du registre CTRLB} ~~\\
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=12cm]{DAC_CTRLB}
+	\caption{Description registre DAC CTRLB}
+\end{figure}
+\begin{itemize}
+	\item \textbf{EOEN} - External Output Enable - Ce champ permet d'activer ou de désactiver la sortie du buffer. Nous ne souhaitons appliquer la tension sur le pin Vout,  on écrit dans le registre \textbf{1 \textless \textless 0}\\
+	\item \textbf{IOEN} - Internal Output Enable - La sortie interne n'est pas utilisée on écrit \textbf{0 \textless \textless 1} dans le registre.\\
+	\item \textbf{LEFTADJ} Left-Adjusted Data - La taille du registre \texttt{DATA} est de 16 bits mais seul les 10 premiers sont utilisés. Ce champs permet de sélectionner les bits en partant de la droite ou de la gauche. Dans notre cas les poids faibles sont à droite on choisira l'option d'alignement à droite. On écrit dans le registre \textbf{0 \textless \textless 2}\\
+	\item \textbf{VPD} - Voltage Pump Disabled - Cette option permet d'économiser de l'énergie. Sa gestion et conservée comme automatique par l'écriture de \textbf{1 \textless \textless 3} dans le registre.\\
+	\item \textbf{BDWP} - Bypass DATABUF Write Protection - Le registre DATABUF n'est pas utilisé, il n'est donc pas nécessaire de le protéger, on écrit \textbf{1 \textless \textless 4} dans le registre.\\
+	\item \textbf{REFSEL[1:0]} - Reference Selection - Ce registre permet de sélectionner la source de tension de référence. Nous prendrons l'alimentation destinée aux circuits analogiques en écrivant  \textbf{0x1 \textless \textless 6} dans le registre.\\
+\end{itemize}
+
+\paragraph{Initialisation  du registre DATA} ~~\\
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=12cm]{DATA}
+	\caption{Description registre DAC CTRLB}
+\end{figure}
+Ce registre contient la valeur 10 bits à convertir dont l'alignement a été sélectionné avec le registre \texttt{LEFTADJ}. Pour tester la bonne configuration se champs pourra être chargé à $1023/2$. Un tension de $3,3/3V$ devrait pouvoir être observée. 
+
+\newpage
+
+La configuration du DAC traduite en langage C donne le résultat suivant :
+\begin{lstlisting}[style=CStyle]
+void config_DAC(void){
+	Dac *ptr_DAC = DAC ;
+	
+	ptr_DAC -> CTRLA.reg = 	DAC_CTRLA_RUNSTDBY 	|
+                          DAC_CTRLA_ENABLE 		|
+                          DAC_CTRLA_SWRST_NO ;
+	
+	ptr_DAC -> CTRLB.reg = 	DAC_CTRLB_REFSEL_AVCC	|
+                          DAC_CTRLB_BDWP_NO			|
+                          DAC_CTRLB_VPD_NO			|
+                          DAC_CTRLB_LEFTADJ_NO  |
+                          DAC_CTRLB_IOEN_NO 		|
+                          DAC_CTRLB_EOEN ;
+	/* Initialisation pour test */
+	ptr_DAC -> DATA.reg = 1024/2;
+	/* DATA.reg valeur 10bits max */
+}
+\end{lstlisting}
+De nouveau l'utilisation des structures de l'ASF facilité grandement le travail. Cela améliore aussi la compréhension et donc la modification par un tiers.  
+
+
+	\newpage
 	
 	\bibliography{lib}{}
 	\bibliographystyle{unsrt}

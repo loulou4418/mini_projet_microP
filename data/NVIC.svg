@@ -15,7 +15,10 @@
    version="1.1"
    id="svg6408"
    inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
-   sodipodi:docname="NVIC.svg">
+   sodipodi:docname="NVIC.svg"
+   inkscape:export-filename="/home/lou/Documents/ETN4/microP/mini_projet_microP/data/NVIC.png"
+   inkscape:export-xdpi="250"
+   inkscape:export-ydpi="250">
   <defs
      id="defs6402">
     <marker
@@ -131,6 +134,31 @@
        apply_no_weight="true"
        apply_with_weight="true"
        only_selected="false" />
+    <marker
+       inkscape:stockid="Arrow2Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow2Lend-9-9-8"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         inkscape:connector-curvature="0"
+         id="path838-0-1-6"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="matrix(-1.1,0,0,-1.1,-1.1,0)" />
+    </marker>
+    <inkscape:path-effect
+       effect="bspline"
+       id="path-effect6989-8-3-8"
+       is_visible="true"
+       weight="33.333333"
+       steps="2"
+       helper_size="0"
+       apply_no_weight="true"
+       apply_with_weight="true"
+       only_selected="false" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -140,8 +168,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.98994949"
-     inkscape:cx="372.75798"
-     inkscape:cy="569.82622"
+     inkscape:cx="500.8948"
+     inkscape:cy="427.72061"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -158,7 +186,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -172,38 +200,38 @@
        id="rect6953-9-8-0"
        width="58.799297"
        height="18.174324"
-       x="20.270071"
-       y="177.34323" />
+       x="19.422407"
+       y="176.22551" />
     <rect
-       style="opacity:0.97000002;fill:#ba5c92;fill-opacity:1;stroke:none;stroke-width:0.11291588;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="opacity:0.97000002;fill:#bb6697;fill-opacity:1;stroke:none;stroke-width:0.11291588;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="rect6953-9-8"
        width="58.799297"
        height="18.174324"
-       x="18.675713"
-       y="178.79561" />
+       x="17.072096"
+       y="178.52834" />
     <rect
-       style="opacity:0.97000002;fill:#d670ac;fill-opacity:1;stroke:none;stroke-width:0.11291588;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="opacity:0.97000002;fill:#da79b2;fill-opacity:1;stroke:none;stroke-width:0.11291588;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="rect6953-9-8-5"
        width="58.799297"
        height="18.174324"
-       x="16.90177"
-       y="180.35002" />
+       x="14.542199"
+       y="180.64972" />
     <rect
        style="opacity:0.98000004;fill:#62bc70;fill-opacity:1;stroke:none;stroke-width:0.11818945;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="rect6953-3"
        width="58.799297"
        height="19.911577"
        x="110.50094"
-       y="176.50337" />
+       y="177.38527" />
     <rect
        style="opacity:0.98000004;fill:#f4bb2e;fill-opacity:1;stroke:none;stroke-width:0.14999999;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="rect6953-3-0"
        width="58.799297"
        height="32.072342"
-       x="199.81511"
-       y="169.68799" />
+       x="202.48781"
+       y="172.64124" />
     <path
-       transform="translate(85.491052,0.98202347)"
+       transform="translate(85.491052,2.5989339)"
        style="fill:none;stroke:#000000;stroke-width:0.26499999;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow2Lend-7)"
        d="m 85.793518,184.7468 c 0,0 25.657872,0 25.657872,0"
        id="path6987-6"
@@ -213,13 +241,13 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:6.3499999px;line-height:1.25;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Medium';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-       x="27.555277"
-       y="191.02469"
+       x="24.628744"
+       y="191.13539"
        id="text7563"><tspan
          sodipodi:role="line"
          id="tspan7561"
-         x="27.555277"
-         y="191.02469"
+         x="24.628744"
+         y="191.13539"
          style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:6.3499999px;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Medium';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332">Périphériques</tspan></text>
     <path
        style="fill:none;stroke:#000000;stroke-width:0.26499999;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow2Lend-9)"
@@ -228,32 +256,32 @@
        inkscape:connector-curvature="0"
        inkscape:path-effect="#path-effect6989-8"
        inkscape:original-d="M 85.793518,184.7468 H 111.45139"
-       transform="translate(-4.765081,1.4822482)" />
+       transform="translate(-4.765081,2.5989339)" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:6.3499999px;line-height:1.25;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Medium';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
        x="129.06714"
-       y="188.61597"
+       y="190.23288"
        id="text7563-1-3"><tspan
          sodipodi:role="line"
          id="tspan7561-1-1"
          x="129.06714"
-         y="188.61597"
+         y="190.23288"
          style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:8.46666622px;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Medium';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332">NVIC</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:6.3499999px;line-height:1.25;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Medium';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-       x="229.21889"
-       y="182.59669"
+       x="231.89159"
+       y="186.0712"
        id="text7563-1-3-3"><tspan
          sodipodi:role="line"
-         x="229.21889"
-         y="182.59669"
+         x="231.89159"
+         y="186.0712"
          style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:7.05555534px;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Medium';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.26458332"
          id="tspan8557">Cortex-M0+</tspan><tspan
          sodipodi:role="line"
-         x="229.21889"
-         y="191.41614"
+         x="231.89159"
+         y="194.89064"
          style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:7.05555534px;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Medium';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.26458332"
          id="tspan8563">processor Core</tspan></text>
     <flowRoot
@@ -267,27 +295,27 @@
            height="147.48227"
            x="156.57364"
            y="389.6398" /></flowRegion><flowPara
-         id="flowPara8645"></flowPara></flowRoot>    <rect
+         id="flowPara8645" /></flowRoot>    <rect
        style="opacity:0.98000004;fill:#50a6d9;fill-opacity:1;stroke:none;stroke-width:0.1185854;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="rect6953-3-5"
        width="58.799297"
        height="20.045212"
-       x="110.50094"
-       y="208.26651" />
+       x="110.23367"
+       y="213.07736" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:6.3499999px;line-height:1.25;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Medium';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-       x="139.81223"
-       y="216.26848"
+       x="139.54495"
+       y="220.27751"
        id="text7563-2"><tspan
          sodipodi:role="line"
          id="tspan7561-6"
-         x="140.86798"
-         y="216.26848"
+         x="140.60071"
+         y="220.27751"
          style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:6.3499999px;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Medium';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.26458332">Interrupt vector </tspan><tspan
          sodipodi:role="line"
-         x="139.81223"
-         y="224.20598"
+         x="139.54495"
+         y="228.21501"
          style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:6.3499999px;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Medium';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.26458332"
          id="tspan8896">table</tspan></text>
     <path
@@ -297,7 +325,60 @@
        inkscape:connector-curvature="0"
        inkscape:path-effect="#path-effect6989-8-3"
        inkscape:original-d="m 85.793518,187.28586 0.0151,-9.00526"
-       transform="matrix(-1,0,0,1,225.69979,19.80043)"
+       transform="matrix(-1,0,0,1,243.33958,22.740395)"
        sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.26499999;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow2Lend-9-9-8)"
+       d="m 85.793518,187.28586 c 0,0 0.0151,-9.00526 0.0151,-9.00526"
+       id="path6987-9-3-3"
+       inkscape:connector-curvature="0"
+       inkscape:path-effect="#path-effect6989-8-3-8"
+       inkscape:original-d="m 85.793518,187.28586 0.0151,-9.00526"
+       transform="matrix(1,0,0,-1,38.210127,387.79663)"
+       sodipodi:nodetypes="cc" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:6.3499999px;line-height:1.25;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Medium';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="112.43211"
+       y="207.23276"
+       id="text7563-2-8"><tspan
+         sodipodi:role="line"
+         x="112.43211"
+         y="207.23276"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:6.3499999px;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Medium';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.26458332"
+         id="tspan8896-3">@IVT</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:6.3499999px;line-height:1.25;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Medium';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="167.24872"
+       y="208.96541"
+       id="text7563-2-8-3"><tspan
+         sodipodi:role="line"
+         x="167.24872"
+         y="208.96541"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:6.3499999px;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Medium';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.26458332"
+         id="tspan8896-3-8">@ISR</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:6.3499999px;line-height:1.25;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Medium';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="92.814156"
+       y="185.04477"
+       id="text7563-2-8-0"><tspan
+         sodipodi:role="line"
+         x="92.814156"
+         y="185.04477"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:6.3499999px;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Medium';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.26458332"
+         id="tspan8896-3-4">IRQ</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:6.3499999px;line-height:1.25;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Medium';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="183.71556"
+       y="185.84657"
+       id="text7563-2-8-3-7"><tspan
+         sodipodi:role="line"
+         x="183.71556"
+         y="185.84657"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:6.3499999px;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Medium';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.26458332"
+         id="tspan8896-3-8-6">@ISR</tspan></text>
   </g>
 </svg>

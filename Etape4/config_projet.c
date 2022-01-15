@@ -115,28 +115,24 @@ void config_TC6(void){
 
 void configure_TC6_IT(void){
 	Tc *ptr_TC = TC6;
-
 	ptr_TC->COUNT16.INTENSET.reg = TC_INTFLAG_MC0;
-
 }
 
 void config_DAC(void){
-
 	Dac *ptr_DAC = DAC ;
 	
 	ptr_DAC ->CTRLA.reg = DAC_CTRLA_RUNSTDBY |
 					  DAC_CTRLA_ENABLE |
 					  DAC_CTRLA_SWRST_NO ;
-	//while (ptr_DAC->STATUS.reg != 0);
+
 	ptr_DAC ->CTRLB.reg = DAC_CTRLB_REFSEL_AVCC |
 					  DAC_CTRLB_BDWP_NO |
 					  DAC_CTRLB_VPD_NO |
 					  DAC_CTRLB_LEFTADJ_NO |
 					  DAC_CTRLB_IOEN_NO |
 					  DAC_CTRLB_EOEN ;
-	//while (ptr_DAC->STATUS.reg != 0);
-	ptr_DAC ->DATA.reg = 0;
-	
+	/* Initialisation pour test */
+	ptr_DAC ->DATA.reg = 1024/2;
 }
 
 void config_PWM (void){

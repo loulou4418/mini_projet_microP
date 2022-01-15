@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
+   sodipodi:docname="calcul_gabarit_FSM.svg"
+   enable-background="new">
+  <defs
+     id="defs2">
+    <marker
+       inkscape:isstock="true"
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker2418"
+       style="overflow:visible">
+      <path
+         id="path2416"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <inkscape:path-effect
+       only_selected="false"
+       apply_with_weight="true"
+       apply_no_weight="true"
+       helper_size="0"
+       steps="2"
+       weight="33.333333"
+       lpeversion="1"
+       is_visible="true"
+       id="path-effect5891"
+       effect="bspline" />
+    <marker
+       inkscape:isstock="true"
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5901"
+       style="overflow:visible">
+      <path
+         id="path5899"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <inkscape:path-effect
+       only_selected="false"
+       apply_with_weight="true"
+       apply_no_weight="true"
+       helper_size="0"
+       steps="2"
+       weight="33.333333"
+       lpeversion="1"
+       is_visible="true"
+       id="path-effect5887"
+       effect="bspline" />
+    <inkscape:path-effect
+       only_selected="false"
+       apply_with_weight="true"
+       apply_no_weight="true"
+       helper_size="0"
+       steps="2"
+       weight="33.333333"
+       lpeversion="1"
+       is_visible="true"
+       id="path-effect5563"
+       effect="bspline" />
+    <filter
+       inkscape:collect="always"
+       style="color-interpolation-filters:sRGB"
+       id="filter3025">
+      <feBlend
+         inkscape:collect="always"
+         mode="screen"
+         in2="BackgroundImage"
+         id="feBlend3027" />
+    </filter>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.98994949"
+     inkscape:cx="455.44175"
+     inkscape:cy="675.91822"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1-1"
+     showgrid="false"
+     inkscape:window-width="1832"
+     inkscape:window-height="1009"
+     inkscape:window-x="0"
+     inkscape:window-y="34"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Calque 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="layer1-1"
+       inkscape:label="Calque 1"
+       transform="translate(-11.88372,-19.882709)"
+       style="filter:url(#filter3025)">
+      <path
+         id="path5558"
+         d="M 109.51279,55.70974 V 163.87969"
+         style="fill:none;stroke:#000000;stroke-width:0.25091001px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="cc" />
+      <g
+         id="g1087"
+         transform="translate(-19.276786)">
+        <ellipse
+           style="opacity:0.98999999;fill:#ffffff;stroke:#000000;stroke-width:0.16940288;stroke-linejoin:round;paint-order:markers fill stroke"
+           id="path1036"
+           cx="128.51686"
+           cy="69.118858"
+           rx="6.9506984"
+           ry="6.5920486" />
+        <text
+           xml:space="preserve"
+           style="font-size:3.52777004px;line-height:1;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Normal';text-align:center;text-anchor:middle;opacity:0.98999999;stroke-width:0.26458299"
+           x="128.51376"
+           y="70.154449"
+           id="text837"><tspan
+             sodipodi:role="line"
+             x="128.51376"
+             y="70.154449"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23332977px;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;text-align:center;text-anchor:middle;stroke-width:0.26458299"
+             id="tspan5399">Repos</tspan></text>
+      </g>
+      <path
+         id="path881-9"
+         d="m 106.04439,113.1107 h 6.77106 v -0.11466 0"
+         style="opacity:0.98999999;fill:none;stroke:#000000;stroke-width:0.26458299px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         inkscape:connector-curvature="0" />
+      <path
+         id="path881-1"
+         d="m 105.39294,171.37289 h 6.77106 v -0.11466 0"
+         style="fill:none;stroke:#000000;stroke-width:0.26458299px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         inkscape:connector-curvature="0" />
+      <text
+         inkscape:transform-center-y="11.636065"
+         inkscape:transform-center-x="-3.0013659"
+         id="text959-0-8"
+         y="67.48925"
+         x="119.53274"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778006px;line-height:1.25;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;stroke-width:0.26458299"
+         xml:space="preserve"><tspan
+           id="tspan5516"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778006px;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;stroke-width:0.26458299"
+           y="67.48925"
+           x="119.53274"
+           sodipodi:role="line">Vconsigne := 0</tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778006px;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;stroke-width:0.26458299"
+           y="71.898972"
+           x="119.53274"
+           sodipodi:role="line"
+           id="tspan2968">temps := temps +1</tspan></text>
+      <path
+         id="path881-9-2"
+         d="m 106.04439,142.67693 h 6.77106 v -0.11466 0"
+         style="fill:none;stroke:#000000;stroke-width:0.26458299px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         inkscape:connector-curvature="0" />
+      <text
+         inkscape:transform-center-y="11.636065"
+         inkscape:transform-center-x="-3.0013659"
+         id="text959-0-8-4-2-8"
+         y="172.90398"
+         x="114.76898"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778006px;line-height:1.25;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;stroke-width:0.26458299"
+         xml:space="preserve"><tspan
+           id="tspan9195-3"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778006px;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;stroke-width:0.26458299"
+           y="172.90398"
+           x="114.76898"
+           sodipodi:role="line">temps &gt;= Tdescente</tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778006px;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;stroke-width:0.26458299"
+           y="177.31371"
+           x="114.76898"
+           sodipodi:role="line"
+           id="tspan2996">temps := 0</tspan></text>
+      <path
+         sodipodi:nodetypes="ccccc"
+         id="path2670"
+         d="m 109.32288,162.37038 -0.16361,16.96837 H 84.988949 V 69.499152 h 16.840191"
+         style="fill:none;stroke:#000000;stroke-width:0.26791501px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker2418)"
+         inkscape:connector-curvature="0" />
+      <g
+         id="g1082"
+         transform="translate(-19.276786,11.953405)">
+        <path
+           inkscape:connector-curvature="0"
+           style="opacity:0.98999999;fill:none;stroke:#000000;stroke-width:0.26458299px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m 125.06518,86.552771 h 6.77106 v -0.11466 0"
+           id="path881" />
+        <ellipse
+           style="opacity:0.98999999;fill:#ffffff;stroke:#000000;stroke-width:0.16940288;stroke-linejoin:round;paint-order:markers fill stroke"
+           id="path1036-3"
+           cx="128.51686"
+           cy="86.552773"
+           rx="6.9506989"
+           ry="6.5920486" />
+        <text
+           xml:space="preserve"
+           style="font-size:3.52777004px;line-height:1;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Normal';text-align:center;text-anchor:middle;opacity:0.98999999;stroke-width:0.26458299"
+           x="128.49515"
+           y="88.044151"
+           id="text837-8"><tspan
+             sodipodi:role="line"
+             x="128.49515"
+             y="88.044151"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23332977px;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;text-align:center;text-anchor:middle;stroke-width:0.26458299"
+             id="tspan5399-0">Accel</tspan></text>
+      </g>
+      <g
+         id="g1076"
+         transform="translate(-19.276786,16.473275)">
+        <ellipse
+           style="opacity:0.98999999;fill:#ffffff;stroke:#000000;stroke-width:0.16940288;stroke-linejoin:round;paint-order:markers fill stroke"
+           id="path1036-4"
+           cx="128.51686"
+           cy="111.42023"
+           rx="6.9506989"
+           ry="6.5920486" />
+        <text
+           xml:space="preserve"
+           style="font-size:3.52777004px;line-height:1;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Normal';text-align:center;text-anchor:middle;opacity:0.98999999;stroke-width:0.26458299"
+           x="128.59438"
+           y="112.99058"
+           id="text837-7"><tspan
+             sodipodi:role="line"
+             x="128.59438"
+             y="112.99058"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23332977px;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;text-align:center;text-anchor:middle;stroke-width:0.26458299"
+             id="tspan5399-6">Vconst</tspan></text>
+      </g>
+      <g
+         id="g1060"
+         transform="translate(-19.276786,32.505952)">
+        <ellipse
+           style="opacity:0.98999999;fill:#ffffff;stroke:#000000;stroke-width:0.16940288;stroke-linejoin:round;paint-order:markers fill stroke"
+           id="path1036-8"
+           cx="128.51686"
+           cy="124.77487"
+           rx="6.9506989"
+           ry="6.5920486" />
+        <text
+           xml:space="preserve"
+           style="font-size:3.52777004px;line-height:1;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Normal';text-align:center;text-anchor:middle;opacity:0.98999999;stroke-width:0.26458299"
+           x="128.48895"
+           y="126.21974"
+           id="text837-9"><tspan
+             sodipodi:role="line"
+             x="128.48895"
+             y="126.21974"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23332977px;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;text-align:center;text-anchor:middle;stroke-width:0.26458299"
+             id="tspan5399-06">Deccel</tspan></text>
+      </g>
+      <path
+         id="path881-1-7"
+         d="m 106.04439,83.54448 h 6.77106 v -0.11466 0"
+         style="fill:none;stroke:#000000;stroke-width:0.26458299px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         inkscape:connector-curvature="0" />
+      <text
+         inkscape:transform-center-y="11.636065"
+         inkscape:transform-center-x="-3.0013659"
+         id="text959-0-8-2"
+         y="99.800293"
+         x="119.53274"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778029px;line-height:1.25;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;stroke-width:0.26458299"
+         xml:space="preserve"><tspan
+           id="tspan5516-6"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778029px;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;stroke-width:0.26458299"
+           y="99.800293"
+           x="119.53274"
+           sodipodi:role="line">Vconsigne = (Vpalier*temps)/Tmontee</tspan></text>
+      <text
+         inkscape:transform-center-y="11.636065"
+         inkscape:transform-center-x="-3.0013659"
+         id="text959-0-8-6"
+         y="155.95578"
+         x="119.53274"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778029px;line-height:1.25;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;stroke-width:0.26458299"
+         xml:space="preserve"><tspan
+           id="tspan5516-5"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778029px;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;stroke-width:0.26458299"
+           y="155.95578"
+           x="119.53274"
+           sodipodi:role="line">temps := temps +1</tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778029px;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;stroke-width:0.26458299"
+           y="160.36551"
+           x="119.53274"
+           sodipodi:role="line"
+           id="tspan2998">Vconsigne = (Vpalier*(Tdescente-temps))/Tmontee</tspan></text>
+      <text
+         inkscape:transform-center-y="11.636065"
+         inkscape:transform-center-x="-3.0013659"
+         id="text959-0-8-4-2-8-8"
+         y="143.51601"
+         x="114.76898"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778029px;line-height:1.25;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;stroke-width:0.26458299"
+         xml:space="preserve"><tspan
+           id="tspan9195-3-7"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778029px;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;stroke-width:0.26458299"
+           y="143.51601"
+           x="114.76898"
+           sodipodi:role="line">Temps &gt;= Tpalier</tspan></text>
+      <text
+         inkscape:transform-center-y="11.636065"
+         inkscape:transform-center-x="-3.0013659"
+         id="text959-0-8-4-2-8-9"
+         y="109.86456"
+         x="114.76898"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778029px;line-height:1.25;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;stroke-width:0.26458299"
+         xml:space="preserve"><tspan
+           id="tspan9195-3-6"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778029px;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;stroke-width:0.26458299"
+           y="109.86456"
+           x="114.76898"
+           sodipodi:role="line">temps &gt;= Tmonte</tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778029px;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;stroke-width:0.26458299"
+           y="114.27429"
+           x="114.76898"
+           sodipodi:role="line"
+           id="tspan2974">Vconsigne := Vpalier</tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778029px;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;stroke-width:0.26458299"
+           y="118.68401"
+           x="114.76898"
+           sodipodi:role="line"
+           id="tspan2976">temps := 0</tspan></text>
+      <text
+         inkscape:transform-center-y="11.636065"
+         inkscape:transform-center-x="-3.0013659"
+         id="text959-0-8-4-2-8-0"
+         y="82.593239"
+         x="114.76898"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778029px;line-height:1.25;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;stroke-width:0.26458299"
+         xml:space="preserve"><tspan
+           id="tspan9195-3-4"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778029px;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;stroke-width:0.26458299"
+           y="82.593239"
+           x="114.76898"
+           sodipodi:role="line">temps &gt;= Trepos</tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778029px;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;stroke-width:0.26458299"
+           y="87.002968"
+           x="114.76898"
+           sodipodi:role="line"
+           id="tspan2972">temps :=0</tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778029px;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;stroke-width:0.26458299"
+           y="91.412689"
+           x="114.76898"
+           sodipodi:role="line"
+           id="tspan2970" /></text>
+      <text
+         inkscape:transform-center-y="11.636065"
+         inkscape:transform-center-x="-3.0013659"
+         id="text959-0-8-6-8"
+         y="129.22595"
+         x="119.59571"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778029px;line-height:1.25;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;stroke-width:0.26458299"
+         xml:space="preserve"><tspan
+           id="tspan5516-5-7"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778029px;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;stroke-width:0.26458299"
+           y="129.22595"
+           x="119.59571"
+           sodipodi:role="line">temps := temps +1</tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778029px;font-family:'CMU Serif';-inkscape-font-specification:'CMU Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;stroke-width:0.26458299"
+           y="133.63568"
+           x="119.59571"
+           sodipodi:role="line"
+           id="tspan2998-0" /></text>
+      <rect
+         style="opacity:0.98999999;fill:none;fill-opacity:1;stroke:none;stroke-width:0.26499999;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         id="rect3031"
+         width="181.74327"
+         height="148.33458"
+         x="22.574501"
+         y="42.664173"
+         inkscape:export-xdpi="200"
+         inkscape:export-ydpi="200" />
+      <rect
+         style="opacity:0.98999999;fill:none;fill-opacity:1;stroke:none;stroke-width:0.26499999;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         id="rect3035"
+         width="168.64706"
+         height="130.42752"
+         x="35.670708"
+         y="53.087685"
+         inkscape:export-xdpi="200"
+         inkscape:export-ydpi="200" />
+    </g>
+  </g>
+</svg>

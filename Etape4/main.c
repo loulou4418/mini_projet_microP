@@ -76,18 +76,15 @@ void procedure_traitement_IT(void){
 	Port *ptr_Port = PORT;
 
 	ptr_Port->Group[1].OUTTGL.reg = PORT_PB06;
-	
-
-	
-
 }
 
 void TC6_Handler(void){
 	Tc *ptr_TC = TC6;
+	Dac * ptr_DAC;
 
 	procedure_traitement_IT();
 	
-	Dac * ptr_DAC = DAC;
+	ptr_DAC = DAC;
 	ptr_DAC -> DATA.reg = calcul_gabarit ();
 
 	ptr_TC->COUNT16.INTFLAG.reg = TC_INTFLAG_MC0;
