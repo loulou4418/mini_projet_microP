@@ -183,18 +183,16 @@ int main (void)
 	
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=12cm]{mode Waveform.jpg}
+		\includegraphics[width=0.9\linewidth]{mode Waveform.jpg}
 		\caption{Mode de fonctionnement en WAVEFORM pour les compteurs}
-		\label{pic1}
 	\end{figure}
 	
 	Le mode Match Frequency Generation (MFRQ) est le plus adapté à l'application. En effet, la fréquence n'est fixée qu'avec un seul paramètre CC0. D'après la datasheet du SAMD21, le fonctionnement du mode MFRQ est le suivant. \\
 	
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=12cm]{Match Frequency Operation.jpg}
+		\includegraphics[width=0.9\linewidth]{Match Frequency Operation.jpg}
 		\caption{Fonctionnement timer configuré en MFRQ}
-		\label{pic2}
 	\end{figure}
 	La période T du signal est contrôlée par le registre CC0. Le signal de sortie est numérique, sa valeur se trouve dans WO[0]. A chaque fois que le compteur COUNT atteint la valeur du registre CC0.  Le signal de sortie WO[0] est permuté. La valeur MAX correspond à la résolution du compteur : ici 16 bits donc 65536 valeurs possibles. Il faudra être vigilent car la valeur du compteur vaut deux fois celle du signal de sortie.\\
 	
@@ -202,11 +200,10 @@ int main (void)
 	~~\\
 	Pour obtenir une fréquence de 1kHz il faut déterminer la valeur de CC0 comme expliqué précédemment. Pour faire cela il est primordial de bien comprendre son fonctionnement et les registres impliqués dans la configuration. La figure ci-dessous donne la fréquence de comptage. \\
 	
-	\begin{figure}[htbp]
+	\begin{figure}[H]
 		\centering
 		\includegraphics[width=12cm]{prescaler.jpg}
 		\caption{Configuration du compteur TC}
-		\label{pic3}
 	\end{figure}
 	
 	L'horloge count est fournie à partir de l’horloge GCLK\_TC (Generic clock for TC). Elle est l'horloge de référence pour les TC. Elle a une fréquence de 8MHz. Cette horloge peut être divisée en y appliquant un prescaler afin d’obtenir CLK\_TC\_CNT. N est une pré division de l’horloge du timer. Dans notre cas, le prescaler n’est pas appliqué et prendra la valeur N = 1. L'équation ci-dessous présente la fréquence à laquelle sera effectué le comptage. \\
@@ -228,16 +225,15 @@ int main (void)
 	\end{equation}
 	La valeur chargée dans le registre CC0 sera donc 3999.
 	
-	\subsection{Configuration TC6}
+	\subsection{Configuration pour le TC6}
 	Cette partie détaillé les configurations nécessaires à la génération d'un signal carré de 1kHz grâce à TC6. Les éléments suivants seront configuré : le generic clock controller, le power manager, un port d'entrée sortie et finalement TC6.
-	\subsubsection{Configuration du GCLK} 
+	\subsubsection{Configuration du Generic Clock(GCLK)} 
 	Chaque périphérique de la carte SAMD21 nécessite une horloge de fonctionnement interne. Pour notre périphérique du Timer, il s’agit de GCLK\_TC6 (Generic clock for TC6).\\
 	La figure ci-dessous présente la génération des signaux de l'horloge périphérique et de l'horloge principale. Le Generic Clock Controller est composé de 9 générateurs et de multiplexeurs.\\
-	\begin{figure}[htbp]
+	\begin{figure}[H]
 		\centering
 		\includegraphics[width=12cm]{GENCLK_bloc.jpg}
 		\caption{Fonctionnement du Generic Clock Controller}
-		\label{pic3}
 	\end{figure}
 	On remarque que le Generic Clock Controller est divisé en deux parties. D’une part le Generic Clock Controler est configuré par le registre GENCTRL. D'autre part le Generic Clock Multiplexer est configuré par le registre CLKCTRL.\\
 	
@@ -248,7 +244,6 @@ int main (void)
 		\centering
 		\includegraphics[width=12cm]{GENCTRL.jpg}
 		\caption{Configuration des différents bits du GENCTRL}
-		\label{pic3}
 	\end{figure}
 	
 	\begin{itemize}
@@ -256,7 +251,7 @@ int main (void)
 		cas, nous voulons la désactiver donc il faut mettre {\bf 0\textless\textless21} dans ce champ.~~\\
 		\item {\bf DIVSEL}: Définit le facteur de division de l’horloge. Nous ne voulons pas la diviser donc il faut mettre la valeur {\bf 0\textless\textless20} dans ce champ.~~\\
 		\item {\bf OE}: Permet d’autoriser l’activation sur une sortie de GCLK. Nous ne voulons pas activer cette option donc il faut mettre la valeur {\bf 0\textless\textless19} dans ce champ.~~\\
-		\item {\bf OOV:}: Définit la valeur de la sortie de GCLK. Lorsque l’OE est à 0 il faut mettre également 0 dans ce champ donc la valeur {\bf 0\textless\textless18}.~~\\
+		\item {\bf OOV}: Définit la valeur de la sortie de GCLK. Lorsque l’OE est à 0 il faut mettre également 0 dans ce champ donc la valeur {\bf 0\textless\textless18}.~~\\
 		\item {\bf IDC}:Définit du rapport cyclique en cas de division impaire. Dans notre cas, il faut mettre la valeur {\bf 0\textless\textless17} dans ce champ.~~\\
 		\item {\bf GENEN}: Validation ou non du générateur d’horloge. Nous voulons l’activer donc il faut mettre la valeur {\bf 1\textless\textless16} dans ce champ.~~\\
 		\item {\bf SRC[4:0]}: Choix de la source d’horloge. Nous voulons choisir la source OSC8M donc d’après la datasheet il faut mettre la valeur {\bf 6\textless\textless8} dans ce champ. ~~\\
@@ -265,19 +260,209 @@ int main (void)
 	
 	\paragraph{Configuration du registre CLKCTRL} 
 	~~\\
-	Ce registre permet de choisir parmis les 9 générateurs décrit précédemment. Le détail de Generic Clock Control (CLKCTRL) est donné dans la figure ci-dessous:
+	Ce registre permet de choisir parmis les 9 générateurs décrit précédemment. Le détail de Generic Clock Control (CLKCTRL) est donné dans la figure ci-dessous:\\
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=12cm]{CLKCTRL.jpg}
 		\caption{Configuration des différents bits du CLKCTRL}
-		\label{pic3}
 	\end{figure}
-	\subsubsection{Configuration du PM} 
 	
+	\begin{itemize}
+		\item {\bf WRTLOCK}: Permet le verrouillage de l’horloge générique pour les générateurs 1 à 9. Nous avons choisi le générateur 0 et il n’y a pas de verrouillage donc il faut mettre {\bf 0\textless\textless15} dans ce champ.~~\\
+		\item {\bf CLKEN}: Validation de l’horloge générique donc {\bf 1\textless\textless14} dans ce champ.~~\\
+		\item {\bf GEN[3:0]}: Permet de choisir le générateur d’horloge d’entrée. Ici il s’agit GCLK\_GEN[0] donc il faut mettre {\bf 0\textless\textless8} dans ce champ.~~\\
+		\item {\bf ID[5:0]}: Définit le périphérique vers lequel est dirigé l’horloge générique. Dans notre cas, il faut l’envoyer vers TC6 donc d’après la datasheet du SAMD21 il faut mettre la valeur {\bf 1D\textless\textless0}.~~\\
+	\end{itemize}
 	
-	\subsubsection{Configuration du PORT} 
+	\subsubsection{Configuration du Power Manager(PM)} 
+	Une horloge "bus" pour le timer TC6 est délivrée par le Power Manager (PM). Cette horloge permet du dialogue entre le Microprocesseur et le périphérique.\\
+	Le Power Manager montré en figure ci-dessous gère une clock pour le CPU, une clock pour le bus AHB à destination de la mémoire et trois clocks pour le bus APB à destination des périphériques.\\
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.6\linewidth]{PM_bloc.jpg}
+		\caption{Structure du Power Manager}
+	\end{figure}
+	On programme le "Synchronous Clock Controller" en entré CLK, en sortie 3 horloges par les 3 bus interes du Microprocesseur: APBA, APBB et APBC.\\
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\linewidth]{product mapping_SAMD21.jpg}
+		\caption{Cartographie des produits Atmel SAM D21}
+	\end{figure}
+	D'après la cartographie des produits, le Timer TC6 est place sur le bus APBC. Donc il faut configurer les registres:
+	\begin{itemize}
+		\item {APBCSEL}
+		\item {APBCMASK}
+		\item {CPUSEL}
+	\end{itemize}
+	\paragraph{Configuration du registre APBCSEL} 
+	~~\\
+	Le registre APBA Clock Select (APBCSEL) ne contient qu'un seul champ:\\
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.9\linewidth]{APBCSEL.jpg}
+		\caption{Configuration des différents bits du APBCSEL}
+	\end{figure}
 	
-	\subsubsection{Configuration du TC6} 
+	\begin{itemize}
+		\item {\bf APBCDIV[2:0]}: Définit le facteur de division de l'horloge d'entrée GCLKMAIN. On choisit la division par 1 donc il faut mettre {\bf 0\textless\textless0}.~~\\
+	\end{itemize}
+	
+	\paragraph{Configuration du registre APBCMASK} 
+	~~\\
+	Le registre APBC Mask (APBCMASK) contient les validations d'horloge bus pour tous les périphériques connectes sur le bus APBC.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.9\linewidth]{APBCMASK.jpg}
+		\caption{Configuration des différents bits du APBCMASK}
+	\end{figure}
+	Les bits 20:0 permettent de stopper les différentes horloges bus de APBC s’ils sont mis à zéro ou bien de les activer s’ils sont mis à un.
+	\begin{itemize}
+		\item {\bf TC6}: Ici on veut activer l’horloge bus pour TC6 donc il faut mettre {\bf 1\textless\textless14}.~~\\
+	\end{itemize}
+	
+	\paragraph{Configuration du registre CPUCSEL} 
+	~~\\
+	Le registre CPU Clock Select (CPUSEL) ne contient qu'un seul champ:
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.9\linewidth]{CPUSEL.jpg}
+		\caption{Configuration des différents bits du CPUSEL}
+	\end{figure}
+	\begin{itemize}
+		\item {\bf CPUDIV[2:0]}: Permet de définir de facteur de division de l'horloge du CPU par rapport à GCLKMAIN. On choisit la division par 1 donc il faut mettre {\bf 0\textless\textless0}.~~\\
+	\end{itemize}
+	
+	\subsubsection{Configuration des ports d'E/S parallèles} 
+	Le nombre de pattes du microprocesseur est limité: le SAMD21 possède 64 pattes, un nombre bien inférieur à la somme des entrées/sorties de tous les périphériques.\\
+    Il faut donc multiplexer les entrées ou les sorties des périphériques via les ports d’entrée/sortie A et B.\\
+    Dans un premier il nous faut donc trouver sur quelles pins, et dans quel multiplexage il est possible d’observer le signal WO[0] du TC6. D’après la table de multiplexage présente dans la datasheet du SAMD21, ce signal est disponible sur 2 pins : PB02 et PB16, en multiplexage {\bf E}. Cependant la pin PB16 est utilisé aussi pour d’autre fonction, il est donc préférable de prendre la PB02.\\
+    Pour accéder a la sortie WO[0] de TC6, il faudra configurer :
+    \begin{itemize}
+		\item {Registre \bf DIRSET} pour choisir la broche PB02 en sortie
+		\item {Registre \bf PMUX} pour choisir le multiplexage de type E
+		\item {Registre \bf PINCFG} pour valider le multiplexage choisi
+	\end{itemize}
+	
+	\paragraph{Configuration du registre DIRSET} 
+	~~\\
+	Le registre Data Direction Set (DIRSET) permet à l'utilisateur de définir une ou plusieurs broches d'E/S en sortie. \\
+	Ce registre sert à mettre à 1 en bits correspondants dans le registre DIR. Le registre DIR contient le configuration de chacune des pattes du port A ou B. \\
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.9\linewidth]{DIRSET.jpg}
+		\caption{Configuration des différents bits du CPUSEL}
+	\end{figure}
+	\begin{itemize}
+		\item {\bf DIRSET[31:0]}: Le bit à 0 n'a aucun effet. Le bit à 1 configure la broche d'E/S comme une sortie. Pour le port B, il faut configurer la patte 2 en sortie donc il faut mettre {\bf 1\textless\textless2}.
+	\end{itemize}
+	
+	\paragraph{Configuration du registre PMUX} 
+	~~\\
+	Il y a jusqu'à 16 registres de multiplexage périphérique dans chaque groupe, un pour chaque ensemble de deux lignes d'E/S. Le n désigne le numéro de l'ensemble des lignes d'E/S.\\
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.9\linewidth]{Registre du PMUXn.jpg}
+		\caption{Registre du PMUXn}
+	\end{figure}
+	Le registre  Peripheral Multiplexing n (PMUXn) est composé de 16 octets, chacun composé de 2 parties : 4 bits pour les pins impaires, 4 bits pour les pins paires. Ainsi PMUX0 contient le multiplexage des pins 0 (paire) et 1 (impaire). La pin 2 est alors la partie paire de PMUX1.  
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.9\linewidth]{PMUX.jpg}
+		\caption{Configuration des différents bits du PMUXn}
+	\end{figure}
+	
+	\begin{itemize}
+		\item {\bf PMUXE[3:0]}: 0×0 étant le multiplexage A, et 0×8 le I. On spécifie alors le multiplexage à mettre en place : E, donc il faut mettre la valeur {\bf 0×4\textless\textless0}.
+	\end{itemize}
+	
+	\paragraph{Configuration du registre PINCFG} 
+	~~\\
+	Enfin, il faut activer la pin PB02 en passant par les registres Pin Configuration (PINCFG). Ces registres sont définis comme suit:   
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.9\linewidth]{PINCFGn.jpg}
+		\caption{Configuration des différents bits du PINCFGn}
+	\end{figure}
+	
+	\begin{itemize}
+		\item {\bf DRVSTR}: Contrôle la force du driver de sortie. 1 pour fort, 0 pour normal. Ne nous concerne pas ici donc il faut mettre {\bf 0\textless\textless6} dans ce champ.~~\\
+		\item {\bf PULLEN}: Active ou non un la résistance pull-up ou pull-down interne d'une broche d'E/S configurée en entrée. Ne nous concerne pas ici, donc {\bf 0\textless\textless2}.~~\\
+		\item {\bf INEN}: : Validation de la patte comme une entrée. On considère ici une sortie donc il faut mettre {\bf 0\textless\textless1} dans ce champ.~~\\
+		\item {\bf PMUXEN}: Validation ou non le multiplexage E mis en place par le registre PMUX correpondant donc il faut mettre {\bf 1\textless\textless0}.~~\\
+	\end{itemize}
+	
+	\subsubsection{Configuration du périphérique} 
+	Nous utiliserons pour cette partie le Timer Counter 6 (TC6) configuré dans le mode 16 bits.\\
+	Pour générer un signal de fréquence 1kHz, il faut programmer le registre:
+	\begin{itemize}
+		\item {CTRLA}
+		\item {CTRLBLR}
+		\item {CTRLC}
+		\item {CC0}
+	\end{itemize}
+	\paragraph{Configuration du registre CTRLA} 
+	~~\\
+	Le détail de Control A (CTRLA) est donné dans la figure ci-dessous :
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.9\linewidth]{ControlA.jpg}
+		\caption{Configuration des différents bits du CTRLA}
+	\end{figure}
+	
+	\begin{itemize}
+		\item {\bf PRESCSYNC[1:0]}: Le registre de comptage est piloté par une horloge issue de GCLK\_TC via un prescaler. Il faut donc mettre la valeur {\bf 1\textless\textless12}.~~\\
+		\item {\bf RUNSTDBY}: Définit le fonctionnement du TC en mode STANDBY. Il n’y a pas d’intérêt à garder le TC actif en veille donc {\bf 0\textless\textless11}.~~\\
+		\item {\bf PRESCALER[2:0]}: Applique un facteur de division à l’horloge d’entrée entre 1 et 1024. Il ne sera pas nécessaire de diviser au préalable l’horloge donc on garde un prescaler de 1 alors {\bf 0\textless\textless8}.~~\\
+		\item {\bf WAVEGEN[1:0]}: Sélectionne le mode de fonctionnement du compteur. Le mode MFRQ est utilisé, il faut donc {\bf 1\textless\textless5}.~~\\
+		\item {\bf MODE[1:0]}: Sélectionne le mode de comptage pour le compteur, c’est-àdire le nombre de bits de comptage : 8, 16 ou 32 bits. Il nous faut ici compter 4000 valeurs (de 0 à 3999) d’après le modèle présenté en début de section. C’est donc le mode 16 bits qui est choisi, alors {\bf 0\textless\textless2}.~~\\
+		\item {\bf ENABLE}: Valide le timer ou non. Ici nous voulons le valider donc il faut mettre la valeur {\bf 1\textless\textless1}.~~\\
+		\item {\bf SWRST}: Nous ne voulons pas de RESET du Timer donc il faut mettre la valeur {\bf 0\textless\textless0}.~~\\
+	\end{itemize}
+	
+	\paragraph{Configuration du registre CTRLBCLR} 
+	~~\\
+	Le détail de Control B Clear (CTRLBCLR) est donné dans la figure ci-dessous :
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.9\linewidth]{CTRLBCLR.jpg}
+		\caption{Configuration des différents bits du CTRLBCLR}
+	\end{figure}
+	
+	\begin{itemize}
+		\item {\bf CMD[1:0]}: Sélectionne la commande lors du prochain cycle de GCLK du TC: NONE, RETRIGGER ou STOP. Aucun comportement particulier n’est souhaité, on place alors NONE {\bf 0\textless\textless6}.~~\\
+		\item {\bf ONESHOT}: Le One-Shot stop le compteur lors d’un débordement du compteur (inférieur à 0 ou supérieur à la valeur maximale). Placé ce bit à 1 stop cette fonctionnalité. On veut le désactiver donc il faut mettre la valeur {\bf 1\textless\textless2}.~~\\
+		\item {\bf DIR}: Paramètre le sens de comptage : incrémentation(1) ou décrémentation(0). On choisit le mode incrémention donc {\bf 1\textless\textless0}.~~\\
+	\end{itemize}
+	
+	\paragraph{Configuration du registre CTRLC} 
+	~~\\
+	Le détail de Control C (CTRLC) est donné dans la figure ci-dessous :
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.9\linewidth]{CTRLC.jpg}
+		\caption{Configuration des différents bits du CTRLC}
+	\end{figure}
+	
+	\begin{itemize}
+		\item {\bf CPTENx}: Autorise la capture sur les channel 1 et 0. On veut désactiver le mode capture 1 et capture 0 donc il faut mettre la valeur {\bf 0\textless\textless5} et {\bf 0\textless\textless4}.~~\\
+		\item {\bf INVENx}: Inverse les sorties WO[1] et WO[0] lorsque ces bits sont à 1. On ne veut pas inverser la sortie WO[1] et WO[0] donc il faut mettre la valeur {\bf 0\textless\textless1} et {\bf 0\textless\textless0}.~~\\
+	\end{itemize}
+	
+	\paragraph{Configuration du registre CC0} 
+	~~\\
+	Ce registre permet de définir la demi période CC0 du signal W0[0]. \\
+	D’après les calculs présenté précédemment, pour générer un signal de fréquence 1kHz, la valeur chargée dans le registre CC0 sera 3999.\\
+	
+	\subsection{Test et validation}
+	Maintenant que le programmes est terminé, il est implanté sur la carte.\\
+	A l’aide d’un oscilloscope, on visualise le signal de sortie sur la pin PB02 paramétrée précédemment. Le signal en sortie du TC6 présenté en figure ci-dessous:
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.9\linewidth]{chrono_valide_etape2.jpg}
+		\caption{Signal de sortie du TC6}
+	\end{figure}
+	On obtient bien un signal carré de fréquence 1kHz comme signal en sortie du TC6.
+
 	
 	\newpage
 	

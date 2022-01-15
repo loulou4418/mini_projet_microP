@@ -97,7 +97,7 @@ void config_TC6(void){
 								  TC_CTRLA_PRESCALER_DIV1 |
 								  TC_CTRLA_WAVEGEN_MFRQ |
 								  TC_CTRLA_MODE_COUNT16 |
-								  TC_CTRLA_NOENABLE |
+								  TC_CTRLA_ENABLE |
 								  TC_CTRLA_NOSWRST;
 	ptr_TC -> COUNT16.CTRLC.reg = TC_CTRLC_NOCPTEN0 |
 								  TC_CTRLC_NOCPTEN1 |
