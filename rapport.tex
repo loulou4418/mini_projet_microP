@@ -249,8 +249,7 @@ int main (void)
 	\end{figure}
 	
 	\begin{itemize}
-		\item {\bf RUNSTDBY}: Fonctionnement en mode Standby ou non. Dans notre
-		cas, nous voulons la désactiver donc il faut mettre {\bf 0\textless\textless21} dans ce champ.~~\\
+		\item {\bf RUNSTDBY}: Fonctionnement en mode Standby ou non. Dans notre cas, nous voulons la désactiver donc il faut mettre {\bf 0\textless\textless21} dans ce champ.~~\\
 		\item {\bf DIVSEL}: Définit le facteur de division de l’horloge. Nous ne voulons pas la diviser donc il faut mettre la valeur {\bf 0\textless\textless20} dans ce champ.~~\\
 		\item {\bf OE}: Permet d’autoriser l’activation sur une sortie de GCLK. Nous ne voulons pas activer cette option donc il faut mettre la valeur {\bf 0\textless\textless19} dans ce champ.~~\\
 		\item {\bf OOV}: Définit la valeur de la sortie de GCLK. Lorsque l’OE est à 0 il faut mettre également 0 dans ce champ donc la valeur {\bf 0\textless\textless18}.~~\\
@@ -276,6 +275,28 @@ int main (void)
 		\item {\bf ID[5:0]}: Définit le périphérique vers lequel est dirigé l’horloge générique. Dans notre cas, il faut l’envoyer vers TC6 donc d’après la datasheet du SAMD21 il faut mettre la valeur {\bf 1D\textless\textless0}.~~\\
 	\end{itemize}
 	
+	\paragraph{Code de la configuration du GCLK} ~~\\
+	La configuration du GCLK traduite en langage C donne le résultat suivant:
+	\begin{lstlisting}[style=CStyle]
+    void config_GCLK_TC6(void){
+	        Gclk *ptr_GCLK = GCLK;
+	
+	        ptr_GCLK->CLKCTRL.reg = GCLK_CLKCTRL_NOWRTLOCK |
+							                    GCLK_CLKCTRL_CLKEN |
+							                    GCLK_CLKCTRL_GEN_GCLK0 |
+							                    GCLK_CLKCTRL_ID_TC6_TC7 ;
+	
+	        ptr_GCLK->GENCTRL.reg = GCLK_GENCTRL_NORUNSTDBY |
+							                    GCLK_GENCTRL_NODIVSEL |
+							                    GCLK_GENCTRL_NOOE |
+							                    GCLK_GENCTRL_NOOOV |
+							                    GCLK_GENCTRL_NOIDC |
+							                    GCLK_GENCTRL_GENEN |
+							                    GCLK_GENCTRL_SRC_OSC8M |
+						        	            GCLK_GENCTRL_ID(0);
+    }
+	\end{lstlisting}
+	
 	\subsubsection{Configuration du Power Manager(PM)} 
 	Une horloge "bus" pour le timer TC6 est délivrée par le Power Manager (PM). Cette horloge permet du dialogue entre le Microprocesseur et le périphérique.\\
 	Le Power Manager montré en figure ci-dessous gère une clock pour le CPU, une clock pour le bus AHB à destination de la mémoire et trois clocks pour le bus APB à destination des périphériques.\\
@@ -285,12 +306,7 @@ int main (void)
 		\caption{Structure du Power Manager}
 	\end{figure}
 	On programme le "Synchronous Clock Controller" en entré CLK, en sortie 3 horloges par les 3 bus interes du Microprocesseur: APBA, APBB et APBC.\\
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=0.8\linewidth]{product mapping_SAMD21.jpg}
-		\caption{Cartographie des produits Atmel SAM D21}
-	\end{figure}
-	D'après la cartographie des produits, le Timer TC6 est place sur le bus APBC. Donc il faut configurer les registres:
+	D'après la cartographie des produits du datasheet, le Timer TC6 est place sur le bus APBC. Donc il faut configurer les registres:
 	\begin{itemize}
 		\item {APBCSEL}
 		\item {APBCMASK}
@@ -333,6 +349,18 @@ int main (void)
 	\begin{itemize}
 		\item {\bf CPUDIV[2:0]}: Permet de définir de facteur de division de l'horloge du CPU par rapport à GCLKMAIN. On choisit la division par 1 donc il faut mettre {\bf 0\textless\textless0}.~~\\
 	\end{itemize}
+	
+	\paragraph{Code de la configuration du PM} ~~\\
+	La configuration du PM traduite en langage C donne le résultat suivant:
+	\begin{lstlisting}[style=CStyle]
+void config_PM(void){
+	    Pm *ptr_PM = PM;
+	
+	    ptr_PM -> CPUSEL.reg = PM_CPUSEL_CPUDIV_DIV1;
+	    ptr_PM -> APBCSEL.reg = PM_APBCSEL_APBCDIV_DIV1;
+	    ptr_PM -> APBCMASK.reg |= PM_APBCMASK_TC6;
+}
+	\end{lstlisting}
 	
 	\subsubsection{Configuration des ports d'E/S parallèles} 
 	Le nombre de pattes du microprocesseur est limité: le SAMD21 possède 64 pattes, un nombre bien inférieur à la somme des entrées/sorties de tous les périphériques.\\
@@ -393,7 +421,22 @@ int main (void)
 		\item {\bf PMUXEN}: Validation ou non le multiplexage E mis en place par le registre PMUX correpondant donc il faut mettre {\bf 1\textless\textless0}.~~\\
 	\end{itemize}
 	
-	\subsubsection{Configuration du périphérique} 
+	\paragraph{Code de la configuration du PORT} ~~\\
+	La configuration du PORT traduite en langage C donne le résultat suivant:
+	\begin{lstlisting}[style=CStyle]
+void config_PORT(void){
+	    Port *ptr_port = PORT ;
+	
+	    ptr_port -> Group[1].DIRSET.reg = PORT_PB02; 
+	    ptr_port -> Group[1].PMUX[2/2].reg = PORT_PMUX_PMUXE_E;
+	    ptr_port -> Group[1].PINCFG[2].reg = PORT_PINCFG_DRVSTR_NO |
+	                                         PORT_PINCFG_PULLEN_NO |
+	                                         PORT_PINCFG_INEN_NO |
+	                                         PORT_PINCFG_PMUXEN;
+}
+	\end{lstlisting}
+	
+	\subsubsection{Configuration du périphérique Timer Counter} 
 	Nous utiliserons pour cette partie le Timer Counter 6 (TC6) configuré dans le mode 16 bits.\\
 	Pour générer un signal de fréquence 1kHz, il faut programmer le registre:
 	\begin{itemize}
@@ -455,6 +498,31 @@ int main (void)
 	Ce registre permet de définir la demi période CC0 du signal W0[0]. \\
 	D’après les calculs présenté précédemment, pour générer un signal de fréquence 1kHz, la valeur chargée dans le registre CC0 sera 3999.\\
 	
+		\paragraph{Code de la configuration du TC6} ~~\\
+	La configuration du TC6 traduite en langage C donne le résultat suivant:
+	\begin{lstlisting}[style=CStyle]
+void config_TC6(void){
+	    Tc *ptr_TC = TC6 ;
+	
+	    ptr_TC -> COUNT16.CTRLA.reg = TC_CTRLA_PRESCSYNC_PRESC |
+	                                  TC_CTRLA_NORUNSTDBY |
+	                                  TC_CTRLA_PRESCALER_DIV1 |
+	                                  TC_CTRLA_WAVEGEN_MFRQ |
+	                                  TC_CTRLA_MODE_COUNT16 |
+	                                  TC_CTRLA_ENABLE |			
+	                                  TC_CTRLA_NOSWRST;
+	    ptr_TC -> COUNT16.CTRLC.reg = TC_CTRLC_NOCPTEN0 |
+	                                  TC_CTRLC_NOCPTEN1 |
+	                                  TC_CTRLC_NOINVEN0 |
+	                                  TC_CTRLC_NOINVEN1;
+	    ptr_TC -> COUNT16.CTRLBCLR.reg = TC_CTRLBCLR_CMD_NONE |
+	                                     TC_CTRLBCLR_ONESHOT |
+                                    	 TC_CTRLBCLR_DIR;
+    	ptr_TC -> COUNT16.CC[0].reg = 3999;
+    	ptr_TC -> COUNT16.CTRLA.reg |= TC_CTRLA_ENABLE;
+}
+	\end{lstlisting}
+	
 	\subsection{Test et validation}
 	Maintenant que le programmes est terminé, il est implanté sur la carte.\\
 	A l’aide d’un oscilloscope, on visualise le signal de sortie sur la pin PB02 paramétrée précédemment. Le signal en sortie du TC6 présenté en figure ci-dessous:
@@ -464,6 +532,8 @@ int main (void)
 		\caption{Signal de sortie du TC6}
 	\end{figure}
 	On obtient bien un signal carré de fréquence 1kHz comme signal en sortie du TC6.
+	
+
 
 	
 	\newpage
@@ -789,8 +859,162 @@ void config_DAC(void){
 De nouveau l'utilisation des structures de l'ASF facilité grandement le travail. Cela améliore aussi la compréhension et donc la modification par un tiers.  
 
 
-	\newpage
+\newpage
+\section{Implantation de la commande PWM et modélisation du moteur}
+	Le cahier des charges requiert une commande de type PWM pour le moteur. Cette étape consiste à mettre en œuvre ce type de commande en utilisant un Timer. Le moteur sera quant à lui modélisé par un filtre passe-bas de constantes de temps 10ms. Éventuellement, ce filtre passe-bas pourra avoir une fonction d’atténuation, afin d’adapter le niveau de sortie du PWM à celui d'entrée du CAN. Le filtre sera alors réalisé par deux résistances et un condensateur. Selon la configuration du CAN qu’il sera bon d’étudier dans cette étape, il faudra trouver la structure de ce filtre ainsi que les valeurs des composants. 
 	
+\subsection{Génération du signal PWM}
+	\subsubsection{Présentation la fonctionnement du TC en mode PWM}
+	Il nous faut ici réaliser une commande de type PWM pour le moteur, représentative du gabarit mis en place. Le principe de la PWM est le suivant :  
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=10cm]{CaracPWM.jpg}
+	\caption{Principe de la PWM}
+    \end{figure}
+	Le  signal  émis  est  rectangulaire  et  varie  entre  2  états  de  tension :  Umax  et  Umin (généralement  0V). La  tension  moyenne  de  ce signal,  notée  Umoy,  s’évalue de  la  façon suivante :  
+	\begin{equation}
+		U_{moy} = {\frac 1T}{\int_0^T {u(t)} \,{\rm d}t} = {\frac 1T}{[U_{max}*t]_0^{T_{h}}} = {U_{max}}{\frac {T_{h}}T}
+	\end{equation}
+	La tension moyenne ne dépend donc que du rapport cyclique entre $T_{h}$ et $T$. Si $T_{h}$ est nul, la tension moyenne est nulle. Si $T_{h}=T$, la tension moyenne est maximale. \\
+	En se basant sur ce principe, le but est de transformer l’information de Vconsigne en une variation du rapport cyclique d’un signal envoyé au moteur. Si Vconsigne augmente, le rapport augmente et si Vconsigne atteint VpalierMax alors le rapport est maximal. Cette fonction est réalisable  grâce aux timers présent sur la carte. En effet il est possible de programmer un timer en mode MPWM (Match Pulse-Width Modulation). Le fonctionnement de ce mode est le suivant :
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\linewidth]{mode_MPWM.jpg}
+	\caption{Fonctionnement du mode MPWM}
+    \end{figure}
+    Ce mode permet de créer en sortie un signal de période définie par le rapport entre CC1 et CC0. Donc le rapport cyclique est contrôlable. Tant que COUNT a une valeur inférieur a CC1, WO[1] est à l'état haut puis il passe a l'état bas lorsque COUNT est entre CC1 est CC0. \\
+    Le but de cette application étant d'avoir une fréquence de 10 kHz, il faut donc diviser l'horloge mère par 800 c'est à dire prendre un CC0 d'une valeur de 799. \\
+    Le CC1 ne sera pas constant contrairement à CC0, il faudra l'actualiser à chaque fois que la vitesse imposée est changée soit toutes les microsecondes. La valeur de CC1 sera définie par la formule suivante:
+    \begin{equation}
+		CC1 = {\frac {Vconsigne*CC0} {VpalierMax}}={\frac {Vconsigne*799} {VpalierMax}}
+	\end{equation}
+    On sait que $0 \textless Vconsigne \textless {VpalierMax}$. CC1 évoluera donc entre 0 et CC0 ce qui permettra d'avoir un rapport cyclique entre 0 et 100\% comme souhaite.\\
+    \subsubsection{Configuration et programmation}
+    Au niveau, le timer TC7 sera utilisé. En effet celui-ci est déjà activé dans le registre GCLK car l’identifiant de TC7 est lié à celui de TC6 (voir partie 4.2). Il est donc préférable d’utiliser ce timer plutôt que d’en déclarer un nouveau. Les codes reprend en grande partie le principe de TC6 vu précédemment. \\
+    La partie sur le registre GCLK n’a pas besoin d’être réécrite car TC6 et TC7 partageant le même identifiant, l’horloge est déclarée pour les 2 timers lors de l’initialisation de TC6. \\
+    \paragraph{Configuration du Power Manager(PM)} ~~\\
+    L’activation du timer TC7 auprès du Power Manager sans altérer les composants déjà présents. On ajout le code suivant dans le fonction config\_projet() qui est créé pour le TC6 au début:
+    \begin{lstlisting}[style=CStyle]
+void config_PM(void){
+	    Pm *ptr_PM = PM;
+
+	    ptr_PM -> APBCMASK.reg |=           PM_APBCMASK_TC7;
+}
+    \end{lstlisting}
+    \paragraph{Configuration des ports d'E/S parallèles} ~~\\
+    D’après la datasheet SAMD21, la sortie WO[1] du TC7 est disponible sur les pin PA21, PB01 et PB23. Pour des raisons pratiques vis-à-vis de la disposition des pins sur la carte, la pin PB01 est choisie. WO[1] est donc récupéré en sortie sur la pin 1 du port B en multiplexage E. On ajout le code suivant dans la méthode config\_PORT():
+\begin{lstlisting}[style=CStyle]
+void config_PORT(void){
+	/* PWM */
+	ptr_port -> Group[1].DIRSET.reg =  PORT_PB01;
+	ptr_port -> Group[1].PMUX[1/2].reg = PORT_PMUX_PMUXO_E;
+	ptr_port -> Group[1].PINCFG[1].reg = PORT_PINCFG_DRVSTR_NO |
+	                                     PORT_PINCFG_PULLEN_NO |
+	                                     PORT_PINCFG_INEN_NO |
+	                                     PORT_PINCFG_PMUXEN;
+}
+\end{lstlisting}
+    A noter que 1 est impair, il faut donc spécifier le multiplexage E dans la partie impaire du registre PMUX0. D’où l’utilisation de la constante PORT\_PMUX\_PMUXO\_E. 
+    \paragraph{Configuration du périphérique Timer Counter 7} ~~\\
+	Une nouvelle fonction \texttt{config\_PWM()} est créé dans le programme. \\
+	La configuration du registre CTRLA du TC7, reprenant les mêmes éléments que pour TC6, sauf au niveau du mode sélectionné. Ici le mode est le MPWM et mis en place par la constante TC\_CTRLA\_WAVEGEN\_MPWM. 
+\begin{lstlisting}[style=CStyle]
+void config_PWM (void){
+	Tc *ptr_TC = TC7 ;
+	
+	ptr_TC -> COUNT16.CTRLA.reg = TC_CTRLA_PRESCSYNC_PRESC |
+	                              TC_CTRLA_NORUNSTDBY |
+	                              TC_CTRLA_PRESCALER_DIV1 |
+	                              TC_CTRLA_WAVEGEN_MPWM |
+	                              TC_CTRLA_MODE_COUNT16 |
+	                              TC_CTRLA_NOENABLE |
+	                              TC_CTRLA_NOSWRST;
+	//......
+}
+\end{lstlisting}~~\\
+	La configuration des registres CTRLC et CTRLBCLR du TC7, reprenant la même logique que pour TC6, d’où la configuration similaire.
+\begin{lstlisting}[style=CStyle]
+    ptr_TC -> COUNT16.CTRLC.reg = TC_CTRLC_NOCPTEN0 |
+                                  TC_CTRLC_NOCPTEN1 |
+                                  TC_CTRLC_NOINVEN0 |
+                                  TC_CTRLC_NOINVEN1;
+	
+    ptr_TC -> COUNT16.CTRLBCLR.reg = TC_CTRLBCLR_CMD_NONE |
+                                     TC_CTRLBCLR_ONESHOT |
+                                     TC_CTRLBCLR_NODIR;
+\end{lstlisting}~~\\
+	La configuration des 2 champs CC0 et CC1. CC1 est initialisé à 400 et variera par la suite. CC0 est affecté de la constante TC\_CC0\_Val, constante à la valeur 799 comme exprimé précédemment. 
+\begin{lstlisting}[style=CStyle]
+    ptr_TC -> COUNT16.CC[0].reg = TC_CC0_Val; // 10kHz
+    ptr_TC -> COUNT16.CC[1].reg = 400; // duty 50%
+\end{lstlisting}~~\\
+    L’activation du timer TC7 en fin d’initialisation.
+\begin{lstlisting}[style=CStyle]
+    ptr_TC -> COUNT16.CTRLA.reg |= TC_CTRLA_ENABLE;
+\end{lstlisting}~~\\
+    Le timer TC7  est à présent  défini, il faut  maintenant  mettre  en place la  fonction permettant de faire évoluer le palier CC1 en fonction de $duty$ (Vconsigne). Cette fonction est la suivante :  
+\begin{lstlisting}[style=CStyle]
+void write_PWM (uint16_t duty){
+	Tc *ptr_TC = TC7 ;
+	
+	ptr_TC -> COUNT16.CC[1].reg = (duty * TC_CC0_Val) / V_MAX;
+}
+\end{lstlisting}
+    CC1 est défini sur [0 : TC\_TC0\_Val], c’est-à-dire [0 : 799]. V\_MAX est la constante de la valeur 5000.
+\subsection{Dimensionnement du filtre modélisant le moteur}
+	\subsubsection{Calculs pour un filtre passe bas}
+	Pour ce projet, le moteur est représenté par une un filtre passe-bas ainsi qu’un étage d’atténuation (pour effectuer des ajustements sur les plages de tension) composés de résistances et de condensateurs. La structure utilisée est la suivante:	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.6\linewidth]{filtre_RC.jpg}
+	\caption{Schéma du filtre passe-bas}
+    \end{figure}
+    La fonction de transfert est déterminée par l’équation suivante:
+    \begin{equation}
+		H(p)={\frac {G}{1+\tau p}}
+	\end{equation}
+	Avec
+	\begin{equation}
+		G={\frac {V_s}{V_e}}={\frac {R_{2}} {R_{1}+R_{2}}}
+	\end{equation}
+	\begin{equation}
+		\tau=(R_{1}//R_{2}) C={\frac {R_{1}R_{2}} {R_{1}+R_{2}}}C
+	\end{equation}
+	Il nous à présent dimensionner les composants. Le choix du filtre doit permettre d’avoir une tension de sortie égale à $\frac {3,3}{2}$V c’est-à-dire 1,65V. Pour cela, il faut travailler avec REFSEL à 0x2 pour avoir INTVCC1, c’est-à-dire $\frac 12$ de $V_{DDANA}$ mais tant que cela reste [valeur comparée]\textless2,7V.\\
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\linewidth]{Reference Selection_ADC.jpg}
+	\caption{Tensions de références disponibles pour le CAN}
+    \end{figure}
+	Pour obtenir le signal désiré en sortie du filtre, il faut déterminer le gain. Celui-ci est $V_{DDANA}/2$ soit $G={\frac 12}$. De plus, la constante de temps de ce filtre est prise à 10 ms d’après le cahier des charges. Donc les composants reposent sur 2 conditions exprimées dans l’étape:
+	\begin{itemize}
+		\item {Constante de temps du filtre passe bas de 10ms }
+		\item {Gain de 0,5}
+	\end{itemize}
+	Selon l'équation (8) et (9), on peut obtenir:
+    \begin{equation}
+		{\frac {R_{1}R_{2}} {R_{1}+R_{2}}}C = 10 ms
+	\end{equation}
+	\begin{equation}
+		{\frac {R_{2}} {R_{1}+R_{2}}} = {\frac {1}{2}}
+	\end{equation}
+	D'après l'équation (11), on suppose que $R_{1}=R_{2}=R$. On peut obtenir alors 
+	 \begin{equation}
+		{\frac {R^2}{2R}} C={\frac {R}{2}}C = 10 ms
+	\end{equation}
+	Le choix de C étant limité dans les valeurs de composants existants, il est défini à 10 $\mu$F. Donc la valeur de R est 2,2 k$\Omega$. 
+	\subsubsection{Test du filtre passe bas}
+	Le circuit peut à présent être réalisé sur la planche à pain. Pour vérifier la constante de temps, nous utilisons l'oscilloscope pour observer la sortie du filtre. Le résultat est présenté dans la figure ci-dessous:
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\linewidth]{test_filtre passe bas.PNG}
+	\caption{Test de la sotie du filtre passe bas}
+    \end{figure}
+	D'après le résultat du test, la constante de temps est environ 10 ms qui vérifie le cahier des charges. Une fois le montage effectué, il suffit de relier les cartes ensemble ensuite de faire la simulation.
+	
+\subsection{Résultats de l’implantation}
+    
+  
 	\bibliography{lib}{}
 	\bibliographystyle{unsrt}
 	
