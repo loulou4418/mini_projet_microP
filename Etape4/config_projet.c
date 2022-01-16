@@ -106,7 +106,7 @@ void config_TC6(void){
 	ptr_TC -> COUNT16.CTRLBCLR.reg = TC_CTRLBCLR_CMD_NONE |
 									 TC_CTRLBCLR_ONESHOT |
 									 TC_CTRLBCLR_DIR;
-	ptr_TC -> COUNT16.CC[0].reg = 7999; //0X1387 (4999)_10
+	ptr_TC -> COUNT16.CC[0].reg = 7999;
 	
 	ptr_TC -> COUNT16.CTRLA.reg |= TC_CTRLA_ENABLE;								 
 								  
