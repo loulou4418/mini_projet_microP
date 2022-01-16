@@ -314,7 +314,6 @@ int main (void)
 		\item {CPUSEL}
 	\end{itemize}
 Ils sont respectivement en charge du facteur de division appliqué sur l'horloge de APBC, du masque d'activation et du facteur de division appliqué sur l'horloge du CPU.
-	\newpage
 	\paragraph{Configuration du registre APBCSEL} 
 	~~\\
 	Le registre APBA Clock Select (APBCSEL) ne contient qu'un seul champ:\\
@@ -379,7 +378,7 @@ void config_PM(void){
 		\item {Registre \bf PMUX} pour choisir le multiplexage de type E
 		\item {Registre \bf PINCFG} pour valider le multiplexage choisi
 	\end{itemize}
-	
+	\newpage
 	\paragraph{Configuration du registre DIRSET} 
 	~~\\
 	Le registre Data Direction Set (DIRSET) permet à l'utilisateur de définir une ou plusieurs broches d'E/S en sortie. Ce registre sert à mettre à 1 en bits correspondants dans le registre DIR. Le registre DIR contient le configuration de chacune des pattes du port A ou B.
@@ -391,7 +390,7 @@ void config_PM(void){
 	\begin{itemize}
 		\item {\bf DIRSET[31:0]}: Le bit à 0 n'a aucun effet. Le bit à 1 configure la broche d'E/S comme une sortie. Pour le port B, il faut configurer la patte 2 en sortie donc il faut mettre {\bf 1\textless\textless2}.
 	\end{itemize}
-	\newpage
+	
 	\paragraph{Configuration du registre PMUX} 
 	~~\\
 	Il y a jusqu'à 16 registres de multiplexage périphérique dans chaque groupe, un pour chaque ensemble de deux lignes d'E/S. Le n désigne le numéro de l'ensemble des lignes d'E/S.
@@ -410,7 +409,7 @@ void config_PM(void){
 	\begin{itemize}
 		\item {\bf PMUXE[3:0]}: 0x0 étant le multiplexage A, et 0x8 le I. On spécifie alors le multiplexage à mettre en place : E, donc il faut mettre la valeur {\bf 0x4\textless\textless0}.
 	\end{itemize}
-	
+	\newpage
 	\paragraph{Configuration du registre PINCFG} 
 	~~\\
 	Enfin, il faut activer la broche PB02 en passant par les registres Pin Configuration (PINCFG).Ils sont définis ainsi:   
@@ -426,9 +425,7 @@ void config_PM(void){
 		\item {\bf INEN}: : Validation de la patte comme une entrée. On considère ici une sortie donc il faut mettre {\bf 0\textless\textless1} dans ce champ.~~\\
 		\item {\bf PMUXEN}: Validation ou non le multiplexage E mis en place par le registre PMUX correpondant donc il faut mettre {\bf 1\textless\textless0}.~~\\
 	\end{itemize}
-	\newpage
-	\subsubsection{Configuration du périphérique} 
-	Nous utiliserons pour cette partie le Timer Counter 6 (TC6) configuré dans le mode 16 bits. Pour générer un signal de fréquence 1kHz, il faut programmer les registres:
+
 	
 	\paragraph{Code de la configuration du PORT} ~~\\
 	La configuration du PORT traduite en langage C donne le résultat suivant:
@@ -559,7 +556,7 @@ void config_TC6(void){
 		\includegraphics[width=\linewidth]{polling_task}
 		\caption{Ordonnancement tâches avec polling}
 	\end{figure}
-	La figure ci-dessus représente l'exécution \footnote{Aucune échelle précise n'est choisi le but étant une simple présentation fonctionnelle.} d'un programme comme celui de l'étape 1 auquel une seconde tâche a été ajoutée (tâche 2).  Deux cas sont illustrés dans cet exemple. Le premier, à gauche, correspond au bon déroulement, le processeur lit de manière successive l'état du switch (étape 1), lorsque une lecture vaut '1' l'état de la led est mis à '1' et même chose pour '0'. Une petite (latence) est présente mais elle sera généralement négligée. Dans le second cas, à droite, la tâche 2 est en cours d'exécution est empêche la lecture du bouton. Une fois terminée la mise à jours de la led peut s'opérer comme précédement. L'exécution de la tâche 2 a générer un retard qui n'est cette fois-ci plus négligeable du point de vue de l'utilisateur. Si la tâche 2 avait durée un instant de plus le système n'aurait pas réagi à la stimulation. Un tel cas ne doit, en aucun cas, se produire pour un système dont la sécurité est critique.\\
+	La figure ci-dessus représente l'exécution \footnote{Aucune échelle précise n'est choisi le but étant une simple présentation du fonctionnement.} d'un programme comme celui de l'étape 1 auquel une seconde tâche a été ajoutée (tâche 2).  Deux cas sont illustrés dans cet exemple. Le premier, à gauche, correspond au bon déroulement, le processeur lit de manière successive l'état du switch (étape 1), lorsque une lecture vaut '1' l'état de la led est mis à '1' et même chose pour '0'. Une petite (latence) est présente mais elle sera généralement négligée. Dans le second cas, à droite, la tâche 2 est en cours d'exécution est empêche la lecture du bouton. Une fois terminée la mise à jours de la led peut s'opérer comme précédement. L'exécution de la tâche 2 a générer un retard qui n'est cette fois-ci plus négligeable du point de vue de l'utilisateur. Si la tâche 2 avait durée un instant de plus le système n'aurait pas réagi à la stimulation. Un tel cas ne doit, en aucun cas, se produire pour un système dont la sécurité est critique.\\
 	En pratique ce problème survient fréquemment. Les interactions utilisateurs, tel que l'appuis sur un bouton, sont relativement lentes comparés à la vitesse de fonctionnement des processeurs. Un "polling" pourra suffire dans certains cas. Mais pour ce qui est des événements matériels, comme un timer ou un protocole série, la situation est plus critique. Il n'y a alors pas d'autres solutions que d'utiliser une interruption. De manière générale les logiciels utilisant des interruptions fonctionnent plus efficacement que ceux basés sur le "pooling". Aucun temps n'est perdu à contrôler l'apparition d'un événement. L'approche par déclenchement sur évènements (en: even-trigger) offre également une meilleur réactivité. \cite{ARM_book}
 	\subsection{Fonctionnement d'une interruption }
 	Une interruption est définie comme une suspension temporaire de l'exécution d'un programme informatique par le microprocesseur afin d'exécuter un programme prioritaire (routine d'interruption). La dite suspension est déclenchée par une source externe. \\
@@ -805,11 +802,11 @@ uint16_t calcul_gabarit (uint16_t VPalier){
 	La fonction calcul gabarit a été implémenté et doit donc être testée. Le résultat retourné est \texttt{Vconsigne}, dont la valeur analogique est comprise entre 0 et 5000. Pour visualiser son évolution dans le temps on peut s'appuyer sur un périphérique présent dans le SAMD21, le convertisseur numérique vers analogique (DAC : Digital Analog Converter). Ainsi il sera possible de visualiser le gabarit générer sous sa forme temporel tel qu'il a été décrit initialement dans le cahier des charges. Le DAC converti une valeur numérique en tension. Celui présent dans le microcontrôleur utilisé dispose d'une voix 10 bits sur 3,3V, soit une précision de 3,32mV. Sa représentation structurelle sous forme d'un diagramme bloc est la suivante :
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.75\linewidth]{DAC}
+		\includegraphics[width=0.6\linewidth]{DAC}
 		\caption{Description diagramme bloc DAC}
 	\end{figure}
 	Les données à convertir transitent sur le bus APB BRIDGE C et doivent être dans le registre \texttt{DATA} ou \texttt{DATABUFER}. Ils correspondent respectivement à la valeur actuellement convertie et à la prochaine valeur convertie. Dans notre cas nous n'utiliserons que le registre \texttt{DATA}. Sa valeur est ensuite transmise à l'unité de conversion 10 bits dont la tension de référence, tension maximum, peut être sélectionnée parmi plusieurs sources. Le résultat sorte finalement sur une sortie interne, un buffer capable de débiter un courant plus important. Comme pour les autres périphériques un certain nombre de registres sont à disposition pour configurer ses nombreuses fonctionnalités.
-	
+	\subsubsection{Configuration du périphérique}
 	\paragraph{Configuration du registre CTRLA} ~~\\
 	\begin{figure}[H]
 		\centering
@@ -845,30 +842,143 @@ uint16_t calcul_gabarit (uint16_t VPalier){
 \end{figure}
 Ce registre contient la valeur 10 bits à convertir dont l'alignement a été sélectionné avec le registre \texttt{LEFTADJ}. Pour tester la bonne configuration ce champ pourra être chargé à $1023/2$. Un tension de $3,3/3V$ devrait pouvoir être observée. 
 
-\newpage
-
+\paragraph{Code configuration périphérique DAC} ~~\\
 La configuration du DAC traduite en langage C donne le résultat suivant :
 \begin{lstlisting}[style=CStyle]
 void config_DAC(void){
-	Dac *ptr_DAC = DAC ;
-	
-	ptr_DAC -> CTRLA.reg = 	DAC_CTRLA_RUNSTDBY 	|
-                          DAC_CTRLA_ENABLE 		|
-                          DAC_CTRLA_SWRST_NO ;
-	
-	ptr_DAC -> CTRLB.reg = 	DAC_CTRLB_REFSEL_AVCC	|
-                          DAC_CTRLB_BDWP_NO			|
-                          DAC_CTRLB_VPD_NO			|
-                          DAC_CTRLB_LEFTADJ_NO  |
-                          DAC_CTRLB_IOEN_NO 		|
-                          DAC_CTRLB_EOEN ;
-	/* Initialisation pour test */
-	ptr_DAC -> DATA.reg = 1024/2;
-	/* DATA.reg valeur 10bits max */
+Dac *ptr_DAC = DAC ;
+
+ptr_DAC -> CTRLA.reg = 	DAC_CTRLA_RUNSTDBY 	|
+                        DAC_CTRLA_ENABLE 		|
+                        DAC_CTRLA_SWRST_NO ;
+
+ptr_DAC -> CTRLB.reg = 	DAC_CTRLB_REFSEL_AVCC	|
+                        DAC_CTRLB_BDWP_NO			|
+                        DAC_CTRLB_VPD_NO			|
+                        DAC_CTRLB_LEFTADJ_NO  |
+                        DAC_CTRLB_IOEN_NO 		|
+                        DAC_CTRLB_EOEN ;
+/* Initialisation pour test */
+ptr_DAC -> DATA.reg = 1024/2;
+/* DATA.reg valeur 10bits max */
 }
 \end{lstlisting}
 De nouveau l'utilisation des structures de l'ASF facilité grandement le travail. Cela améliore aussi la compréhension et donc la modification par un tiers.  
 
+
+\subsubsection{Configuration du Generic Clock(GCLK)}
+Comme pour les autres périphériques le DAC a besoin d'un signal d'horloge pour fonctionner. Ce dernier est générer par le Generic Clock (GCLK). La fréquence maximum du DAC est de 350Ksps et celle de référence de 8MHz. Il faut donc ajuster le facteur de division selon la formule suivante :
+\begin{equation}
+	GENDIV = \frac{F_{mclk}}{F_{DAC}}=\frac{8.10^6}{350.10^3}=22,85
+\end{equation}
+En arrondissant à l'entier supérieur, la valeur retenue est 23.
+
+La configuration du GCLK s'opère et deux temps avec le registre GENCTRL puis CLKCTRL.
+
+\paragraph{Configuration du registre GENCTRL} 
+~~\\
+Le détail de Generic Clock Generator Control (GENCTRL) est donné dans la figure ci-dessous:
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=13cm]{extr_GENCTRL}
+	\caption{Extrait description registre GENCTRL}
+\end{figure}
+\newpage
+\begin{itemize}
+	\item {\bf RUNSTDBY}: Fonctionnement en mode Standby ou non. Dans notre cas, nous voulons la désactiver donc il faut mettre {\bf 0\textless\textless21} dans ce champ.~~\\
+	\item {\bf DIVSEL}: Définit le facteur de division de l’horloge. \hl{Nous ne voulons pas la diviser donc il faut mettre la valeur {\bf 0\textless\textless20} dans ce champ}.~~\\
+	\item {\bf OE}: Permet d’autoriser l’activation sur une sortie de GCLK. Pour effectuer un test préliminaire lors de la configuration du DAC le \textbf{signal d'horloge sera observé sur une broche}. Il faut mettre la valeur {\bf 1\textless\textless19} dans ce champ.~~\\
+	\item {\bf OOV}: Définit la valeur de la sortie de GCLK. Lorsque l’OE est à 0 il faut mettre également 0 dans ce champ donc la valeur {\bf 0\textless\textless18}.~~\\
+	\item {\bf IDC}:Définit du rapport cyclique en cas de division impaire. Dans notre cas, il faut mettre la valeur {\bf 0\textless\textless17} dans ce champ.~~\\
+	\item {\bf GENEN}: Validation ou non du générateur d’horloge. Nous voulons l’activer donc il faut mettre la valeur {\bf 1\textless\textless16} dans ce champ.~~\\
+	\item {\bf SRC[4:0]}: Choix de la source d’horloge. Nous voulons choisir la source OSC8M donc d’après la datasheet il faut mettre la valeur {\bf 6\textless\textless8} dans ce champ. ~~\\
+	\item {\bf ID[3:0]}: Définit le numéro du générateur que l'on configure (0 à 8). \textbf{Nous choisissons le générateur 1} donc il faut mettre la valeur {\bf 0x1\textless\textless0}.
+\end{itemize}
+\paragraph{Configuration du registre CLKCTRL} 
+~~\\
+Ce registre permet de choisir parmis les 9 générateurs décrit précédemment. Le détail de Generic Clock Control (CLKCTRL) est donné dans la figure ci-dessous:
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=12cm]{CLKCTRL.jpg}
+	\caption{Configuration des différents bits du CLKCTRL}
+\end{figure}
+
+\begin{itemize}
+	\item {\bf WRTLOCK}: Permet le verrouillage de l’horloge générique pour les générateurs 1 à 9. Nous avons choisi le générateur 1 et il n’y a pas de verrouillage donc il faut mettre {\bf 0\textless\textless15} dans le registre.~~\\
+	\item {\bf CLKEN}: Validation de l’horloge générique donc {\bf 1\textless\textless14} dans le registre.~~\\
+	\item {\bf GEN[3:0]}: Permet de choisir le générateur d’horloge d’entrée. Ici il s’agit GCLK\_GEN[1] donc il faut mettre {\bf 0x1\textless\textless8} dans ce champ.~~\\
+	\item {\bf ID[5:0]}: Définit le périphérique vers lequel est dirigé l’horloge générique. Dans notre cas, il faut l’envoyer vers DAC donc d’après la datasheet du SAMD21 il faut mettre la valeur {\bf 0x21\textless\textless0} dans le registre.~~\\
+\end{itemize}
+\paragraph{Configuration du registre GENDIV} 
+~~\\
+Ce registre permet de choisir le facteur de division à appliquer sur l'horloge source.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=12cm]{GENDIV}
+	\caption{Extrait description registre GENDIV}
+\end{figure}
+
+\begin{itemize}
+	\item {\bf DIV}: Permet la sélection du facteur de division. Dans notre cas la valeur est 23. Il faut mettre la valeur {\bf 0x23\textless\textless8} dans le registre.\\
+	\item {\bf ID[3:0]}: Définit le numéro du générateur que l'on configure (0 à 8). \textbf{Nous choisissons le générateur 1} donc il faut mettre la valeur {\bf 0x1\textless\textless0} dans le registre.
+
+\end{itemize}
+
+
+
+\paragraph{Code de la configuration du GCLK} ~~\\
+
+La traduction en langage C de la spécification ci-dessus est la suivante.
+
+\begin{lstlisting}[style=CStyle]
+Gclk *ptr_GCLK = GCLK;
+						
+ptr_GCLK->CLKCTRL.reg = GCLK_CLKCTRL_NOWRTLOCK |
+										GCLK_CLKCTRL_CLKEN |
+										GCLK_CLKCTRL_GEN_GCLK1 |
+										GCLK_CLKCTRL_ID_DAC ;
+
+ptr_GCLK->GENCTRL.reg = GCLK_GENCTRL_NORUNSTDBY |
+									GCLK_GENCTRL_NODIVSEL |
+									GCLK_GENCTRL_OE |
+									GCLK_GENCTRL_NOOOV |
+									GCLK_GENCTRL_NOIDC |
+									GCLK_GENCTRL_GENEN |
+									GCLK_GENCTRL_SRC_OSC8M |
+									GCLK_GENCTRL_ID(0x1);
+
+ptr_GCLK->GENDIV.reg =	GCLK_GENDIV_ID(0x1)		|
+								GCLK_GENDIV_DIV(23);
+\end{lstlisting}
+
+\newpage
+\subsubsection{Configuration du Power Manager(PM)}
+Aucune division d'horloge supplémentaire n'est faite pour le DAC. Nous sommes donc dans la même situation que précédement. La mise à jour du masque APBCMASK suffit. Cela se traduit en C de la manière suivante :
+\begin{lstlisting}[style=CStyle]
+ptr_PM -> APBCMASK.reg |= PM_APBCMASK_TC6 | PM_APBCMASK_TC7 | PM_APBCMASK_DAC;
+\end{lstlisting}
+
+\subsubsection{Configuration des ports d’E/S parallèles}
+Nous avons souhaité, pour effectuer un test préliminaire durant la configuration du DAC, observer le signal d'horloge sur une broche. Lors de la configuration du GLCK il faut préciser que le signal sera placé en sortie. Cela étant fait, nous pouvons dès à présent configurer le port de sortie lui même.
+\begin{lstlisting}[style=CStyle]
+ptr_port -> Group[0].DIRSET.reg = PORT_PA02;
+ptr_port -> Group[0].PMUX[2/2].reg = PORT_PMUX_PMUXE_B;
+ptr_port -> Group[0].PINCFG[2].reg = PORT_PINCFG_DRVSTR_NO |
+                                     PORT_PINCFG_PULLEN_NO |
+                                     PORT_PINCFG_INEN_NO |
+                                     PORT_PINCFG_PMUXEN;
+\end{lstlisting}
+\paragraph{Observation GCLK} ~~\\
+Avant de vérifier le fonctionnement global du DAC. Il est possible d'observer la bonne génération de son signal d'horloge.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=7cm]{defaut}
+	\includegraphics[width=7cm]{defaut}
+	\caption{Oscillographe validation configuration DAC}
+\end{figure}
+La fréquence observée sur la figure de gauche représentant le signal GCLK est de \hl{XXHz}. Cela est parfaitement conforme aux spécifications puisque il était question de générer un signal proche mais inférieur à 350KHz. L'objectif de cette étape peut sembler discutable mais dans la pratique l'observation du signal d'horloge a facilité le debug en éliminant des causes potentielles de dysfonctionnent.
+  
+La figure de droite observant la sortie du DAC modulée permet de valider la fonction calcul gabarit. Le curseur montre une période totale de XXms. Cela est cohérent puisque les spécifications indiquaient $128 + 512 + 168 + 64 = 872ms$
 
 \newpage
 \section{Implantation de la commande PWM et modélisation du moteur}
@@ -909,7 +1019,7 @@ De nouveau l'utilisation des structures de l'ASF facilité grandement le travail
 void config_PM(void){
 	    Pm *ptr_PM = PM;
 
-	    ptr_PM -> APBCMASK.reg |=           PM_APBCMASK_TC7;
+	    ptr_PM -> APBCMASK.reg |= PM_APBCMASK_TC7;
 }
     \end{lstlisting}
     \paragraph{Configuration des ports d'E/S parallèles} ~~\\
@@ -1025,6 +1135,7 @@ void write_PWM (uint16_t duty){
 	
 \subsection{Résultats de l’implantation}
     
+  \newpage
   
 	\bibliography{lib}{}
 	\bibliographystyle{unsrt}
