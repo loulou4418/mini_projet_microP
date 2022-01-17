@@ -42,7 +42,8 @@
 }
 
 
-\title{\textbf{projet} \\ document}
+\title{\textbf{Projet système à microprocesseur} \\
+	 Mise en œuvre d'une application sur un microcontrôleur à cœur ARM}
 
 \author{Louison GOUY \and Yiying WEI}
 
@@ -58,15 +59,14 @@
 
 \vspace*{1cm}
 
-\begin{center}
-    name
-\end{center}
+
 
 \vspace*{7cm}
 
 \begin{center}
 
-Abstract: Ce rapport présent un projet de réalisation d'une application sur un microcontrôleur à cœur ARM. Elle est décrite en six étapes qui permettent, les une après les autres, d'enrichir la configuration de départ puis observer les résultats pratiques attendus.
+Résumé\\
+ Ce rapport présent un projet de réalisation d'une application sur un microcontrôleur à cœur ARM. Elle est abordée en six étapes qui permettent, les unes après les autres, d'enrichir la configuration de départ puis observer les résultats pratiques attendus.
 
 \end{center}
 
@@ -758,8 +758,6 @@ void config_TC6(void){
 	\end{lstlisting}
 	Cette fonction d'interruption témoin commence par la déclaration du pointeur TC6. Mais si cette variable ne sert qu'à la dernière ligne il est impératif de l'initialisation au début de la fonction comme l'indique la recommandation 53 de guide de référence de l'ANSSI \cite{ANSSI2021}. Ensuite, la procédure de traitement est appelée. Elle consiste à inverser (en:toggle) l'état du pin PB6. Pour finir, le drapeau d'interruption est remis à zéro grâce au registre Flag Status and Clear
 	(INTFLAG) dont la structure est identique à celle de la figure \ref{fig:INTENSET}. Il peut être intéressant de noter que la fonction \texttt{procedure\_traitement\_IT();} n'étant appelée qu'une seule fois dans le programme sera insérée directement dans le code en assembler. C'est l'équivalent d'un \texttt{inline} réalisé automatiquement par le compilateur.
-	\\
-	\hl{ajouter code assembler pour le prouver et capture d'ecran frequence IT}\\
 	\newline
 	\indent
 	
@@ -1070,13 +1068,13 @@ ptr_port -> Group[0].PINCFG[2].reg = PORT_PINCFG_DRVSTR_NO |
 Avant de vérifier le fonctionnement global du DAC. Il est possible d'observer la bonne génération de son signal d'horloge.
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=7cm]{defaut}
-	\includegraphics[width=7cm]{defaut}
+	\includegraphics[width=6cm]{347}
+	\includegraphics[width=6cm]{gab}
 	\caption{Oscillographe validation configuration DAC}
 \end{figure}
-La fréquence observée sur la figure de gauche représentant le signal GCLK est de \hl{XXHz}. Cela est parfaitement conforme aux spécifications puisque il était question de générer un signal proche mais inférieur à 350KHz. L'objectif de cette étape peut sembler discutable mais dans la pratique l'observation du signal d'horloge a facilité le debug en éliminant des causes potentielles de dysfonctionnent.
+La fréquence observée sur la figure de gauche représentant le signal GCLK est de 347 kHz. Cela est parfaitement conforme aux spécifications puisque il était question de générer un signal proche mais inférieur à 350KHz. L'objectif de cette étape peut sembler discutable mais dans la pratique l'observation du signal d'horloge a facilité le debug en éliminant des causes potentielles de dysfonctionnent.
   
-La figure de droite observant la sortie du DAC modulée permet de valider la fonction calcul gabarit. Le curseur montre une période totale de XXms. Cela est cohérent puisque les spécifications indiquaient $128 + 512 + 168 + 64 = 872ms$
+La figure de droite observant la sortie du DAC modulée permet de valider la fonction calcul gabarit. Les mesures effectuées avec l'oscilloscope sur le temps d'accélération, de vitesse constantes, de décélération et d'attentes sont conformes au cahier des charges. 
 
 \newpage
 \section{Implantation de la commande PWM et modélisation du moteur}
@@ -1261,97 +1259,12 @@ Pour arriver à un tel résultat il a été nécessaire de faire appel à un cer
 Ce projet à but pédagogique s'est déroulé dans un cadre favorable à l'apprentissage. Nous remercions nos  deux professeurs encadrants M.Friot et M.Leprevost tous deux experts du domaine. Ce Tp traitant d’une thématique concrète a suscité notre intérêt et a permis d'illustrer les séances théoriques de travaux dirigés. Une étude bibliographique importante a été réalisée en complément du support de cours. Cela a été très bénéfique en termes de connaissances acquises notamment sur le ARM Cortex-M0+. La collaboration au sein du binôme a parfaitement fonctionné.
 
 
-  
+  	
+  \newpage
 	\bibliography{lib}{}
 	\bibliographystyle{unsrt}
+
 	
-	\newpage
-	
-	\section{Annexe}
-	
-	\subsection{Programme C programmation TC6}
-\begin{lstlisting}[style=CStyle]
 
-#define GCLK_CLKCTRL_NOWRTLOCK        (0x0ul << GCLK_CLKCTRL_WRTLOCK_Pos)
-
-#define GCLK_GENCTRL_NORUNSTDBY       (0x0ul << GCLK_GENCTRL_RUNSTDBY_Pos)
-#define GCLK_GENCTRL_NODIVSEL         (0x0ul << GCLK_GENCTRL_DIVSEL_Pos)
-#define GCLK_GENCTRL_NOOE             (0x0ul << GCLK_GENCTRL_OE_Pos)
-#define GCLK_GENCTRL_NOOOV            (0x0ul << GCLK_GENCTRL_OOV_Pos)
-#define GCLK_GENCTRL_NOIDC            (0x0ul << GCLK_GENCTRL_IDC_Pos)
-
-#define TC_CTRLA_NORUNSTDBY           (0x0ul << TC_CTRLA_RUNSTDBY_Pos)
-#define TC_CTRLA_NOENABLE             (0x0ul << TC_CTRLA_ENABLE_Pos)
-#define TC_CTRLA_NOSWRST              (0x0ul << TC_CTRLA_SWRST_Pos)
-
-#define TC_CTRLC_NOCPTEN0             (0 << TC_CTRLC_CPTEN0_Pos)
-#define TC_CTRLC_NOCPTEN1             (0 << TC_CTRLC_CPTEN1_Pos)
-#define TC_CTRLC_NOINVEN0             (0 << TC_CTRLC_INVEN0_Pos)
-#define TC_CTRLC_NOINVEN1             (0 << TC_CTRLC_INVEN1_Pos)
-
-#define TC_CTRLBCLR_NOONESHOT         (0x0ul << TC_CTRLBCLR_ONESHOT_Pos)
-
-#define PORT_PINCFG_DRVSTR_NO          (0x0ul << PORT_PINCFG_DRVSTR_Pos)
-#define PORT_PINCFG_PULLEN_NO          (0x0ul << PORT_PINCFG_PULLEN_Pos)
-#define PORT_PINCFG_INEN_NO            (0x0ul << PORT_PINCFG_INEN_Pos)
-
-
-Gclk *ptr_GCLK;
-Pm *ptr_PM;
-Port *ptr_port;
-Tc *ptr_TC;
-
-ptr_GCLK = GCLK;
-ptr_GCLK->CLKCTRL.reg = GCLK_CLKCTRL_NOWRTLOCK |
-								GCLK_CLKCTRL_CLKEN |
-								GCLK_CLKCTRL_GEN_GCLK0 |
-								GCLK_CLKCTRL_ID_TC6_TC7 ;
-
-ptr_GCLK->GENCTRL.reg = GCLK_GENCTRL_NORUNSTDBY |
-								GCLK_GENCTRL_NODIVSEL |
-								GCLK_GENCTRL_NOOE |
-								GCLK_GENCTRL_NOOOV |
-								GCLK_GENCTRL_NOIDC |
-								GCLK_GENCTRL_GENEN |
-								GCLK_GENCTRL_SRC_OSC8M |
-								GCLK_GENCTRL_ID(0);
-									
-	ptr_PM = PM;
-	
-	ptr_PM -> CPUSEL.reg = PM_CPUSEL_CPUDIV_DIV1;
-	ptr_PM -> APBCSEL.reg = PM_APBCSEL_APBCDIV_DIV1;
-	ptr_PM -> APBCMASK.reg |= PM_APBCMASK_TC6 | PM_APBCMASK_TC7 | PM_APBCMASK_DAC;
-	
-	ptr_port = PORT ;
-	
-	ptr_port -> Group[1].DIRSET.reg = PORT_PB02 | PORT_PB06 ; 
-	ptr_port -> Group[1].PMUX[2/2].reg = PORT_PMUX_PMUXE_E;
-	ptr_port -> Group[1].PINCFG[2].reg = PORT_PINCFG_DRVSTR_NO |
-										PORT_PINCFG_PULLEN_NO |
-										PORT_PINCFG_INEN_NO |
-										PORT_PINCFG_PMUXEN;
-	ptr_TC = TC6 ;
-	
-	ptr_TC -> COUNT16.CTRLA.reg = TC_CTRLA_PRESCSYNC_PRESC |
-									TC_CTRLA_NORUNSTDBY |
-									TC_CTRLA_PRESCALER_DIV1 |
-									TC_CTRLA_WAVEGEN_MFRQ |
-									TC_CTRLA_MODE_COUNT16 |
-									TC_CTRLA_NOENABLE |
-									TC_CTRLA_NOSWRST;
-	ptr_TC -> COUNT16.CTRLC.reg = TC_CTRLC_NOCPTEN0 |
-									TC_CTRLC_NOCPTEN1 |
-									TC_CTRLC_NOINVEN0 |
-									TC_CTRLC_NOINVEN1;
-	ptr_TC -> COUNT16.CTRLBCLR.reg = TC_CTRLBCLR_CMD_NONE |
-									TC_CTRLBCLR_ONESHOT |
-									TC_CTRLBCLR_DIR;
-	ptr_TC -> COUNT16.CC[0].reg = 7999;
-	
-	ptr_TC -> COUNT16.CTRLA.reg |= TC_CTRLA_ENABLE;	
-	\end{lstlisting}
 \end{document}
 
-\begin{itemize}
-	\renewcommand{\labelitemi}{--}
-\end{itemize}
