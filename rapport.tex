@@ -341,13 +341,13 @@ int main (void)
 	\end{figure}
 	
 	\begin{itemize}
-		\item {\bf RUNSTDBY}: Fonctionnement en mode Standby ou non. Dans notre cas, nous voulons la désactiver donc il faut mettre {\bf 0\textless\textless21} dans ce champ.~~\\
-		\item {\bf DIVSEL}: Définit le facteur de division de l’horloge. Nous ne voulons pas la diviser donc il faut mettre la valeur {\bf 0\textless\textless20} dans ce champ.~~\\
-		\item {\bf OE}: Permet d’autoriser l’activation sur une sortie de GCLK. Nous ne voulons pas activer cette option donc il faut mettre la valeur {\bf 0\textless\textless19} dans ce champ.~~\\
+		\item {\bf RUNSTDBY}: Fonctionnement en mode Standby ou non. Dans notre cas, nous voulons la désactiver donc il faut mettre {\bf 0\textless\textless21}.~~\\
+		\item {\bf DIVSEL}: Définit le facteur de division de l’horloge. Nous ne voulons pas la diviser donc il faut mettre la valeur {\bf 0\textless\textless20}.~~\\
+		\item {\bf OE}: Permet d’autoriser l’activation sur une sortie de GCLK. Nous ne voulons pas activer cette option donc il faut mettre la valeur {\bf 0\textless\textless19} dans ce registre.~~\\
 		\item {\bf OOV}: Définit la valeur de la sortie de GCLK. Lorsque l’OE est à 0 il faut mettre également 0 dans ce champ donc la valeur {\bf 0\textless\textless18}.~~\\
-		\item {\bf IDC}:Définit du rapport cyclique en cas de division impaire. Dans notre cas, il faut mettre la valeur {\bf 0\textless\textless17} dans ce champ.~~\\
-		\item {\bf GENEN}: Validation ou non du générateur d’horloge. Nous voulons l’activer donc il faut mettre la valeur {\bf 1\textless\textless16} dans ce champ.~~\\
-		\item {\bf SRC[4:0]}: Choix de la source d’horloge. Nous voulons choisir la source OSC8M donc d’après la datasheet il faut mettre la valeur {\bf 6\textless\textless8} dans ce champ. ~~\\
+		\item {\bf IDC}:Définit du rapport cyclique en cas de division impaire. Dans notre cas, il faut mettre la valeur {\bf 0\textless\textless17} dans ce registre.~~\\
+		\item {\bf GENEN}: Validation ou non du générateur d’horloge. Nous voulons l’activer donc il faut mettre la valeur {\bf 1\textless\textless16} dans ce registre.~~\\
+		\item {\bf SRC[4:0]}: Choix de la source d’horloge. Nous voulons choisir la source OSC8M donc d’après la datasheet il faut mettre la valeur {\bf 6\textless\textless8} dans ce registre. ~~\\
 		\item {\bf ID[3:0]}: Définit le numéro du générateur que l'on configure (0 à 8). Nous choisissons la générateur 0 donc il faut mettre la valeur {\bf 0\textless\textless0}.
 	\end{itemize}
 
@@ -363,9 +363,9 @@ int main (void)
 	\end{figure}
 	
 	\begin{itemize}
-		\item {\bf WRTLOCK}: Permet le verrouillage de l’horloge générique pour les générateurs 1 à 9. Nous avons choisi le générateur 0 et il n’y a pas de verrouillage donc il faut mettre {\bf 0\textless\textless15} dans ce champ.~~\\
-		\item {\bf CLKEN}: Validation de l’horloge générique donc {\bf 1\textless\textless14} dans ce champ.~~\\
-		\item {\bf GEN[3:0]}: Permet de choisir le générateur d’horloge d’entrée. Ici il s’agit GCLK\_GEN[0] donc il faut mettre {\bf 0\textless\textless8} dans ce champ.~~\\
+		\item {\bf WRTLOCK}: Permet le verrouillage de l’horloge générique pour les générateurs 1 à 9. Nous avons choisi le générateur 0 et il n’y a pas de verrouillage donc il faut mettre {\bf 0\textless\textless15} dans ce registre.~~\\
+		\item {\bf CLKEN}: Validation de l’horloge générique donc {\bf 1\textless\textless14} dans ce registre.~~\\
+		\item {\bf GEN[3:0]}: Permet de choisir le générateur d’horloge d’entrée. Ici il s’agit GCLK\_GEN[0] donc il faut mettre {\bf 0\textless\textless8} dans ce registre.~~\\
 		\item {\bf ID[5:0]}: Définit le périphérique vers lequel est dirigé l’horloge générique. Dans notre cas, il faut l’envoyer vers TC6 donc d’après la datasheet du SAMD21 il faut mettre la valeur {\bf 1D\textless\textless0}.~~\\
 	\end{itemize}
 	
@@ -518,9 +518,9 @@ void config_PM(void){
 	\end{figure}
 	
 	\begin{itemize}
-		\item {\bf DRVSTR}: Contrôle la force du driver de sortie. 1 pour fort, 0 pour normal. Ne nous concerne pas ici donc il faut mettre {\bf 0\textless\textless6} dans ce champ.~~\\
+		\item {\bf DRVSTR}: Contrôle la force du driver de sortie. 1 pour fort, 0 pour normal. Ne nous concerne pas ici donc il faut mettre {\bf 0\textless\textless6} dans ce registre.~~\\
 		\item {\bf PULLEN}: Active ou non un la résistance pull-up ou pull-down interne d'une broche d'E/S configurée en entrée. Ne nous concerne pas ici, donc {\bf 0\textless\textless2}.~~\\
-		\item {\bf INEN}: : Validation de la patte comme une entrée. On considère ici une sortie donc il faut mettre {\bf 0\textless\textless1} dans ce champ.~~\\
+		\item {\bf INEN}: : Validation de la patte comme une entrée. On considère ici une sortie donc il faut mettre {\bf 0\textless\textless1} dans ce registre.~~\\
 		\item {\bf PMUXEN}: Validation ou non le multiplexage E mis en place par le registre PMUX correpondant donc il faut mettre {\bf 1\textless\textless0}.~~\\
 	\end{itemize}
 
