@@ -102,6 +102,117 @@ Une\textbf{ machine état ou automate fini} est une construction mathématique a
 Le langage C est un langage combiné, il a les caractéristiques des langages évolués (boucles itératives etc.) associé à des fonctionnalités des langages assemblés (décalage de bit, adressage indirect généralisé etc.). C'est la combinaison de ces deux caractéristiques qui font la force du langage\cite{Monteil2012}. Sa proximité avec l'assembleur le rendant très efficace, il est ainsi devenu le langage indispensable dans la programmation des applications comme l'automatique, la robotique, les OS ect. Cette même proximité impose peu de contraintes à l'utilisateur sur la structure de son programme. Aussi, il est possible d'écrire des fonctions avec plusieurs points de sorties, ou encore, d'échapper à une boucle avant son terme. Là où certains trouveront une grande souplesse, les critiques le considérerons trop permissif. On notera qu'un certain nombre d'organismes officiels proposent un ensemble de règles visant, tout en conservant son efficacité, à éviter les problèmes liés à une programmation peu soignée. L'Agence National de la Sécurité des Systèmes Informatiques française (ANSSI) propose un rapport complet, \textit{Règles de programmation pour le développement sécurisé de logiciels en langage C}\cite{ANSSI2021}, visant à "favoriser la production de logiciels C plus sécurisés, plus sûrs, d’une plus grande robustesse et portables". Il servira de référence durant ce projet.
 
 \newpage
+    \section{Présentation du projet}
+    \subsection{Introduction}
+    Ce projet a pour objectif de développer nos connaissances des technologies basées sur les microprocesseurs 16-32 bits ainsi que sur les outils associés de développement et de mise au point. Ce projet aborde :
+    \begin{itemize}
+		\item la prise en main d’une carte d’évaluation d’un microcontrôleur Microchip construit autour du cœur ARM Cortex-M0+,
+		\item la prise en main des outils de développement et de test associés à ce type de cartes (environnement de développement Microchip Studio, debugger, analyseurs logiques),
+		\item le développement incrémental d’une application nécessitant la mise en œuvre des particularités du cœur ARM et des périphériques du microcontrôleur,
+		\item la mise en œuvre d’un composant développé auparavant (projet de conception de circuits) et implanté dans un FPGA.
+	\end{itemize}
+    Pour la réalisation de ce projet, nous disposons de plusieurs outils de documentation mis à disposition. Il est donc nécessaire d'avoir la curiosité d'aller chercher l'information dans les différentes datasheet pour pouvoir correctement implémenter l'application.\\
+    Ce rapport présente l'étude approfondie et les différents résultats des étapes de ce projet.
+    \subsection{Description de l’application}
+    Il s’agit d’implanter une application volontairement simplifiée ici pour tenir compte du volume horaire alloué au projet. La conception selon la méthodologie MCSE est brièvement présentée dans un premier temps, puis une démarche est proposée pour l’implantation de la solution.
+    \subsubsection{Cahier des charges}
+    L’application à développer a pour objectif de générer des cycles de fonctionnement d’un moteur à partir de deux informations :
+    \begin{itemize}
+		\item la vitesse de rotation souhaitée,
+		\item l’instant de démarrage des cycles.
+	\end{itemize}
+	Chaque cycle est déclenché par un ordre de démarrage et comporte trois phases :
+    \begin{itemize}
+		\item accélération d’une durée de 128 ms,
+		\item vitesse constante d’une durée de 512 ms,
+		\item décélération d’une durée de 128 ms.
+	\end{itemize}
+	Le gabarit en vitesse à respecter peut donc être représenté par la figure \ref{pic1}.\\
+	\begin{figure}[htbp]
+		\centering
+		\includegraphics[width=0.9\linewidth]{Gabarit en vitesse a respecter.jpg}
+		\caption{Gabarit en vitesse à respecter}
+		\label{pic1}
+	\end{figure}
+	Les ordres (Start et VPalier) sont transmis au système par l’intermédiaire d’un réseau LIN. Pour limiter l’étendu du problème, on considère qu’aucun ordre n’est transmis pendant un cycle. Le moteur a une gamme de vitesse de 0 à 5000 tr/mn. La valeur de VPalier évolue donc dans cette gamme, avec une précision de 10 tr/mn. La commande du moteur doit être de type PWM avec une fréquence de rafraîchissement de 100 µs. La mesure de la vitesse est effectuée à l’aide d’une dynamo tachymétrique de résolution 0.66 mv/tr/mn.
+	\subsubsection{Conception fonctionnelle}
+	L’étape de conception fonctionnelle a pour objectif de définir une solution en ne considérant que l’aspect fonctionnel et sans tenir compte des contraintes technologiques telles que l’utilisation du bus LIN dans notre cas, la commande moteur de type PWM et la mesure de la vitesse à l’aide d’une dynamo tachymétrique. La solution fonctionnelle proposée pour notre application est donnée par la figure \ref{pic2}.
+	\begin{figure}[htbp]
+		\centering
+		\includegraphics[width=0.9\linewidth]{Solution fonctionnelle.jpg}
+		\caption{Solution fonctionnelle du système à concevoir}
+		\label{pic2}
+	\end{figure}
+	
+	\subsubsection{Définition de la réalisation}
+	Cette étape a pour objectif d’introduire les contraintes technologiques dans la solution. Elle consiste dans un premier temps à ajouter les fonctions nécessaires pour faire l’interface entre les entrées/sorties physiques et les entrées/sorties fonctionnelles. Dans le cas de notre application, il faut introduire :
+	\begin{itemize}
+		\item un convertisseur analogique numérique pour traduire la mesure de vitesse effectuée par la dynamo tachymétrique,
+		\item un générateur PWM pour produire la commande du moteur,
+		\item un récepteur de trames LIN.
+	\end{itemize}
+	La structure détaillée (figure \ref{pic3}) intègre toutes ces fonctions.\\
+	\begin{figure}[htbp]
+		\centering
+		\includegraphics[width=0.9\linewidth]{Structure_systeme.jpg}
+		\caption{Structure détaillée du système à concevoir}
+		\label{pic3}
+	\end{figure}
+	L’étape de définition de la réalisation a aussi pour objectif de spécifier la répartition d’implantation matérielle-logicielle des fonctions et de spécifier l’implantation logicielle des différentes fonctions. L’analyse des caractéristiques du microcontrôleur SAMD21 permet d’envisager l’utilisation de timers pour implanter les fonctions Horloge et PWM et d’un convertisseur pour implanter la fonction CAN. Pour ce qui est de l’implantation de la fonction Recept\_LIN, une interface de communication série présente au sein du microcontrôleur est utilisée. L’émission de la trame de données au format LIN est effectuée par un émetteur intégré au sein d’un FPGA. La spécification d’implantation est résumée par la figure \ref{pic4}.
+	\begin{figure}[htbp]
+		\centering
+		\includegraphics[width=0.9\linewidth]{Specification_implantation.jpg}
+		\caption{Spécification d’implantation}
+		\label{pic4}
+	\end{figure}
+	\newpage
+	\subsubsection{Travail à effectuer}
+	Après avoir spécifié l’implantation de la solution, il faut envisager sa mise en œuvre. Ce travail ne doit pas être effectué en une seule fois au risque d’avoir des difficultés pour le test et éventuellement le debug. Il s’agit donc de trouver une mise en œuvre incrémentale de la solution en validant chaque étape. Une proposition de découpage de l’implantation peut être la suivante :
+	\begin{itemize}
+		\item programmation d’un timer du microcontrôleur pour implanter la fonction Horloge,
+		\item implantation d’une fonction sous interruption (clignotement d’une LED par exemple, validation de la fréquence d’activation),
+		\item implantation de la fonction Calcul\_Gabarit et utilisation du CNA,
+		\item implantation de la commande de type PWM et d’un filtre (modélisation du moteur),
+		\item implantation de la fonction Asservissement et utilisation d’un CAN,
+		\item implantation de la fonction Supervision.
+	\end{itemize}
+	
+	\subsection{Plate-forme de développement}
+	L’application du projet en Systèmes à microprocesseurs sera développée pour un support matériel donné (carte à microprocesseurs), à l’aide des outils de développement appropriés (compilateurs, assembleurs, éditeur de liens et outils de mise au point). La plate-forme matérielle sur laquelle le logiciel sera intégré sera composée d’une carte microcontrôleur Microchip (ex-Atmel) Xplained Pro SAMD21.
+	\subsubsection{Le matériel}
+	Le matériel utilisé dans le cadre de ce projet comprend les éléments suivants :
+	\begin{itemize}
+		\item une valise transparente, utilisée pour stocker les cartes électroniques mises à disposition,
+		\item une carte d’évaluation Xplained Pro SAMD21, dans son emballage d’origine,
+		\item une carte d’extension Xplained Pro PROTO1, dans son emballage d’origine,
+		\item un câble d’alimentation USB, contenu par un cordon en plastique.
+	\end{itemize}
+	La carte utilisée est une carte d’évaluation développée par la société Microchip. Elle fait partie de l’offre de nombreuses cartes fabriquées par la société. La version retenue est la Xplained Pro SAMD21.
+	\subsubsection{Le logiciel}
+	\paragraph{Le firmware}~~\\
+	La carte Xplained Pro SAMD21 comporte un debugger désigné par le terme Atmel Embedded Debugger (EDBG). Cet élément est utilisé afin de programmer et de déboguer le microcontrôleur ATSAMD21J18A. A la mise sous tension de la carte Xplained Pro SAMD21, le microcontrôleur exécute le programme situé en mémoire Flash interne.
+	\paragraph{Le développement du logiciel}~~\\
+	Les outils de développement sont disponibles dans l’ensemble appelé Atmel Studio. Cet ensemble est composé d’exécutables accessibles par des commandes en ligne ou bien par un environnement graphique.
+	\subparagraph{Les commandes en ligne}~~\\
+	Elles se composent des éléments suivants :
+	\begin{itemize}
+		\item un compilateur C ou C++ (ARM GNU C Compiler),
+		\item un assembleur (ARM GNU Assembler),
+		\item des bibliothèques de fonctions écrites en C ou C++,
+		\item d’un éditeur de liens produisant un code absolu au format ELF (ARM GNU Linker),
+		\item d’un debugger.
+	\end{itemize}
+	
+	\subparagraph{L’environnement graphique}~~\\
+	Toutes les commandes sont accessibles via une interface graphique appelée également GUI (Graphic User Interface). Elle comporte :
+	\begin{itemize}
+		\item un outil de gestion des solutions et des projets créés pour la carte,
+		\item un outil de gestion des librairies propres à la carte appelé Atmel Software Framework (ASF),
+		\item d’outils de débogage pour la validation de l’exécution du programme.
+	\end{itemize}
+	Il est également possible d’ajouter des outils complémentaires proposés par la société Microchip ou par des compagnies tierces.
+	
+\newpage
 
 \section{Programme de base} % touver un meilleur titre
 
@@ -170,7 +281,6 @@ int main (void)
 	\paragraph{Condition sur E/S}
 	~~\\
 	Les lignes suivantes implémentées via une structure \texttt{if else} traduisent le comportement souhaité du point de vue utilisateur. A savoir, le maintient en position enfoncé du bouton provoque l'illumination de la LED0. La lecture de son état est permis grâce à la fonction \textbf{port\_pin\_get\_input\_level} retournant un entier de valeur \hl{XX} ou XX. Elle est alors comparé à \texttt{LED\_0\_ACTIVE} définit comme XX. Si la condition est vrai la fonction \texttt{port\_pin\_set\_output\_level} est appelé avec comme paramètre \texttt{LED\_0\_ACTIVE} sinon \texttt{!LED\_0\_ACTIVE}.
-	
 	
 	\newpage
 	\section{Programmation d'un timer}
@@ -1095,10 +1205,10 @@ void write_PWM (uint16_t duty){
 		H(p)={\frac {G}{1+\tau p}}
 	\end{equation}
 	Avec
-	\begin{equation}
+	\begin{equation}\label{key1}
 		G={\frac {V_s}{V_e}}={\frac {R_{2}} {R_{1}+R_{2}}}
 	\end{equation}
-	\begin{equation}
+	\begin{equation}\label{key2}
 		\tau=(R_{1}//R_{2}) C={\frac {R_{1}R_{2}} {R_{1}+R_{2}}}C
 	\end{equation}
 	Il nous à présent dimensionner les composants. Le choix du filtre doit permettre d’avoir une tension de sortie égale à $\frac {3,3}{2}$V c’est-à-dire 1,65V. Pour cela, il faut travailler avec REFSEL à 0x2 pour avoir INTVCC1, c’est-à-dire $\frac 12$ de $V_{DDANA}$ mais tant que cela reste [valeur comparée]\textless2,7V.\\
@@ -1112,14 +1222,14 @@ void write_PWM (uint16_t duty){
 		\item {Constante de temps du filtre passe bas de 10ms }
 		\item {Gain de 0,5}
 	\end{itemize}
-	Selon l'équation (8) et (9), on peut obtenir:
+	Selon l'équation (\ref{key1}) et (\ref{key2}), on peut obtenir:
     \begin{equation}
 		{\frac {R_{1}R_{2}} {R_{1}+R_{2}}}C = 10 ms
 	\end{equation}
-	\begin{equation}
+	\begin{equation}\label{key3}
 		{\frac {R_{2}} {R_{1}+R_{2}}} = {\frac {1}{2}}
 	\end{equation}
-	D'après l'équation (11), on suppose que $R_{1}=R_{2}=R$. On peut obtenir alors 
+	D'après l'équation (\ref{key3}), on suppose que $R_{1}=R_{2}=R$. On peut obtenir alors 
 	 \begin{equation}
 		{\frac {R^2}{2R}} C={\frac {R}{2}}C = 10 ms
 	\end{equation}
