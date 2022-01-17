@@ -66,7 +66,8 @@
 
 \begin{center}
 
-abstract
+Abstract: Ce rapport présent un projet de réalisation d'une application sur un microcontrôleur à cœur ARM. Elle est décrite en six étapes qui permettent, les une après les autres, d'enrichir la configuration de départ puis observer les résultats pratiques attendus.
+
 \end{center}
 
 \newpage
@@ -1229,10 +1230,28 @@ void write_PWM (uint16_t duty){
 	\caption{Test de la sotie du filtre passe bas}
     \end{figure}
 	D'après le résultat du test, la constante de temps est environ 10 ms qui vérifie le cahier des charges. Une fois le montage effectué, il suffit de relier les cartes ensemble ensuite de faire la simulation.
-	
+	\newpage
 \subsection{Résultats de l’implantation}
+Afin de vérifier la commande PWM fonctionne comme convenu, nous allons observer la rapport cyclique du signal sur la PIN PB01. Le résultat de l'oscilloscope est présenté dans la figure \ref{pic_PWM}.~~\\
+Comme montré en figure \ref{pic_PWM}, le rapport cyclique de notre commande PWM varie entre 0 et 50\% avec une période de signal de 100 $\mu$s lorsque notre vitesse de moteur varie entre 0 et 2500 rad/s ce qui permet de valider l'étape.\\
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\linewidth]{test_PWM.PNG}
+\caption{Test du PWM}
+\label{pic_PWM}
+\end{figure}
+\newpage
+La sortie du filtre représenté en jaune sur la figure \ref{pic_att} correspond à la sortie de notre gabarit en bleu, avec une amplitude divisée par deux due au gain de 1/2. Les variations abruptes de tension du gabarit sont lissées grâce au comportement passe-bas du filtre.~~\\
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\linewidth]{gabarit_filtre.PNG}
+\caption{Signal en sortie du CAN (bleu) et en sortie du filtre (jeune)}
+\label{pic_att}
+\end{figure}  
+De plus, on note que la sortie du filtre représenté en jaune sur la figure \ref{pic_att} possède bien un retard de 10 ms sur la sortie du CAN représentée en jaune.
 
 \newpage
+
 \section{Conclusion}
 Ce travail abordant la conception détaillée d'un logiciel embarqué sur une carte de développement basée sur SAMD21 et répondant à un cahier des charges précis. Il spécifie la forme de la commande à générer pour le pilotage d'un moteur à courant continu. Cette forme est composée de trois phases distincte accélération constante pendant 128 ms, vitesse constante pendant 512ms, décélération constante pendant 128ms. Pour faciliter l'observation de ce signal, généré périodiquement pendant les tests, une quatrième phase d'attente d'une durée de 64ms a été ajoutée. La fonction calcul gabarit est la partie dédiée du programme en charge de fabriquer ce signal. Il est ensuite utilisé pour moduler la PMW pilotant le moteur. Pour simplifier l'aspect pratique ce dernier est modélisé par un système du premier ordre implémenté en pratique par un circuit RC. Pour des résultats pédagogiques identiques on s'affranchi ainsi d'un étage de puissance, du moteur DC lui-même et d'un système de mesures tel qu'une dynamo-tachymétriqueque. Bien que nous n'ayons pas eu le temps d'achever ce mini-projet, le travail effectué a pu être validé par des mesures. Après le moteur, se comportant comme un filtre passe vis à visvis de signal PWM, le gabarit conforme au cahier des charges a pu être observé.
 
@@ -1241,8 +1260,7 @@ Pour arriver à un tel résultat il a été nécessaire de faire appel à un cer
 
 Ce projet à but pédagogique s'est déroulé dans un cadre favorable à l'apprentissage. Nous remercions nos  deux professeurs encadrants M.Friot et M.Leprevost tous deux experts du domaine. Ce Tp traitant d’une thématique concrète a suscité notre intérêt et a permis d'illustrer les séances théoriques de travaux dirigés. Une étude bibliographique importante a été réalisée en complément du support de cours. Cela a été très bénéfique en termes de connaissances acquises notamment sur le ARM Cortex-M0+. La collaboration au sein du binôme a parfaitement fonctionné.
 
-    
-  \newpage
+
   
 	\bibliography{lib}{}
 	\bibliographystyle{unsrt}
@@ -1276,6 +1294,61 @@ Ce projet à but pédagogique s'est déroulé dans un cadre favorable à l'appre
 #define PORT_PINCFG_DRVSTR_NO          (0x0ul << PORT_PINCFG_DRVSTR_Pos)
 #define PORT_PINCFG_PULLEN_NO          (0x0ul << PORT_PINCFG_PULLEN_Pos)
 #define PORT_PINCFG_INEN_NO            (0x0ul << PORT_PINCFG_INEN_Pos)
+
+
+Gclk *ptr_GCLK;
+Pm *ptr_PM;
+Port *ptr_port;
+Tc *ptr_TC;
+
+ptr_GCLK = GCLK;
+ptr_GCLK->CLKCTRL.reg = GCLK_CLKCTRL_NOWRTLOCK |
+								GCLK_CLKCTRL_CLKEN |
+								GCLK_CLKCTRL_GEN_GCLK0 |
+								GCLK_CLKCTRL_ID_TC6_TC7 ;
+
+ptr_GCLK->GENCTRL.reg = GCLK_GENCTRL_NORUNSTDBY |
+								GCLK_GENCTRL_NODIVSEL |
+								GCLK_GENCTRL_NOOE |
+								GCLK_GENCTRL_NOOOV |
+								GCLK_GENCTRL_NOIDC |
+								GCLK_GENCTRL_GENEN |
+								GCLK_GENCTRL_SRC_OSC8M |
+								GCLK_GENCTRL_ID(0);
+									
+	ptr_PM = PM;
+	
+	ptr_PM -> CPUSEL.reg = PM_CPUSEL_CPUDIV_DIV1;
+	ptr_PM -> APBCSEL.reg = PM_APBCSEL_APBCDIV_DIV1;
+	ptr_PM -> APBCMASK.reg |= PM_APBCMASK_TC6 | PM_APBCMASK_TC7 | PM_APBCMASK_DAC;
+	
+	ptr_port = PORT ;
+	
+	ptr_port -> Group[1].DIRSET.reg = PORT_PB02 | PORT_PB06 ; 
+	ptr_port -> Group[1].PMUX[2/2].reg = PORT_PMUX_PMUXE_E;
+	ptr_port -> Group[1].PINCFG[2].reg = PORT_PINCFG_DRVSTR_NO |
+										PORT_PINCFG_PULLEN_NO |
+										PORT_PINCFG_INEN_NO |
+										PORT_PINCFG_PMUXEN;
+	ptr_TC = TC6 ;
+	
+	ptr_TC -> COUNT16.CTRLA.reg = TC_CTRLA_PRESCSYNC_PRESC |
+									TC_CTRLA_NORUNSTDBY |
+									TC_CTRLA_PRESCALER_DIV1 |
+									TC_CTRLA_WAVEGEN_MFRQ |
+									TC_CTRLA_MODE_COUNT16 |
+									TC_CTRLA_NOENABLE |
+									TC_CTRLA_NOSWRST;
+	ptr_TC -> COUNT16.CTRLC.reg = TC_CTRLC_NOCPTEN0 |
+									TC_CTRLC_NOCPTEN1 |
+									TC_CTRLC_NOINVEN0 |
+									TC_CTRLC_NOINVEN1;
+	ptr_TC -> COUNT16.CTRLBCLR.reg = TC_CTRLBCLR_CMD_NONE |
+									TC_CTRLBCLR_ONESHOT |
+									TC_CTRLBCLR_DIR;
+	ptr_TC -> COUNT16.CC[0].reg = 7999;
+	
+	ptr_TC -> COUNT16.CTRLA.reg |= TC_CTRLA_ENABLE;	
 	\end{lstlisting}
 \end{document}
 
